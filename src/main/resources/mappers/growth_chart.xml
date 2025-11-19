@@ -3,10 +3,34 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="test6">
+<mapper namespace="chart">
 
-    <select id="test6" resultType="com.kedu.project.user.UserDTO">
-        SELECT * FROM baby
+   <select id="getFetalGrowthList" resultType="com.kedu.project.growth_chart.GrowthChartDTO">
+        SELECT *
+        FROM growth_chart
+        WHERE baby_seq = #{baby_seq} AND measure_type IN ('EFW','HC','OFD','AC','FL')
+        ORDER BY measure_date ASC
     </select>
 
+    <select id="getInfantGrowthList" resultType="com.kedu.project.growth_chart.GrowthChartDTO">
+        SELECT *
+        FROM growth_chart
+        WHERE baby_seq = #{baby_seq} AND measure_type IN ('WEIGHT','HEIGHT','HC')
+        ORDER BY measure_date ASC
+    </select>
+
+    <insert id="insertGrowth">
+        INSERT INTO growth_chart (
+            baby_seq, user_id, measure_date, measure_type, measure_value, created_at, updated_at
+        ) VALUES (
+            #{baby_seq}, #{user_id}, #{measure_date}, #{measure_type}, #{measure_value}, NOW(), NOW()
+        )
+    </insert>
+
+    <update id="updateGrowth">
+        UPDATE growth_chart
+        SET measure_value = #{measure_value},
+            updated_at = NOW()
+        WHERE growth_seq = #{growth_seq}
+    </update>
 </mapper>
