@@ -3,10 +3,65 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="test1">
+<mapper namespace="Board">
 
-    <select id="test1" resultType="com.kedu.project.user.UserDTO">
-        SELECT * FROM baby
-    </select>
+	<!--1. 모든 타입 토탈 카운트-->
+	<select id="getTotalAllCount" resultType="int">
+		select count(*) from board
+	</select>
+
+	<!--1-1. 모든 타입 + 검색어 토탈 카운트-->
+	<select id="getTotalAllFindTargetCount" resultType="int">
+		select count(*) 
+		from board 
+		where (title like concat('%', #{target}, '%') 
+		or content like concat('%', #{target}, '%'))
+	</select>
+
+	<!--2. 특정 타입 토탈 카운트-->
+	<select id="getTotalTypeCount" resultType="int">
+		select count(*) 
+		from board 
+		where board_type=#{board_type}
+	</select>
+
+	<!--2-1. 특정 타입 + 검색어 토탈 카운트-->
+	<select id="getTotalTypeFindTargetCount" resultType="int">
+		select count(*) 
+		from board 
+		where board_type=#{board_type}
+		and (
+			title like concat('%', #{target}, '%') 
+			or content like concat('%', #{target}, '%')
+		)
+	</select>
+
+	<!--3. 일반 페이징-->
+	<select id="getBoardListFromTo" resultType="com.kedu.project.board.BoardDTO">
+		select * from board
+		<where>
+			<if test="board_type != null and board_type != '' and board_type != 'all'">
+				board_type = #{board_type}
+			</if>
+		</where>
+		order by board_seq desc
+		limit #{offset}, #{count}
+	</select>
+
+	<!--3-1. 검색 + 타입 페이징-->
+	<select id="getBoardListFromToWithTarget" resultType="com.kedu.project.board.BoardDTO">
+		select * from board
+		<where>
+			<if test="target != null and target != ''">
+				(title like concat('%', #{target}, '%') 
+				or content like concat('%', #{target}, '%'))
+			</if>
+			<if test="board_type != null and board_type != '' and board_type != 'all'">
+			    and board_type = #{board_type}
+			</if>
+		</where>
+		order by board_seq desc
+		limit #{offset}, #{count}
+	</select>
 
 </mapper>

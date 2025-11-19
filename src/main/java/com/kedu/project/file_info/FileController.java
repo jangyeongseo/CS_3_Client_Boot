@@ -6,7 +6,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("")
 @RestController
-public class FileControoler {
-    @Autowired
-    private FileService fileService;    
+public class FileController {
+	@Autowired
+    private FileService fileService;
+	
+	
+	
+	
+	
+	
 }

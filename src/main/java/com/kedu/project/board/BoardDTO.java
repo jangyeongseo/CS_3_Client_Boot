@@ -14,7 +14,7 @@ public class BoardDTO {
     private int board_seq;
     private String board_type; // 글 타입
     private String user_id;
-    private String titel;
+    private String title;
     private String content;
     private int is_reported; // 신고 횟수
     private boolean is_privated; // 공개 여부
