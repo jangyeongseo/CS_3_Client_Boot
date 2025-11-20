@@ -13,4 +13,13 @@
         SELECT * FROM baby where family_code = #{family_code} and baby_seq = #{baby_seq}
     </select>
 
+    <insert id="babyInsert" useGeneratedKeys="true" keyProperty="baby_seq">
+        INSERT INTO baby
+        (name, gender, family_code, image_name, status,
+         birth_date, updated_at)
+        VALUES
+        (#{name}, #{gender}, #{family_code}, #{image_name},
+         #{status}, #{birth_date}, NOW())
+    </insert>
+
 </mapper>

@@ -40,7 +40,7 @@
     </update>
 
     <select id="selectFamilyCode" resultType="String">
-        select family_code from user user_id = #{user_id}
+        select family_code from user where user_id = #{user_id}
     </select>
 
 </mapper>

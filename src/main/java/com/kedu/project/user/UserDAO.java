@@ -43,7 +43,7 @@ public class UserDAO {
         return mybatis.update("user.pindPwByEmail", dto);
     }
 
-    public String familyCode(String id){
-        return mybatis.selectOne("user.selectFamilyCode", id);
+    public String familyCode(String user_id){
+        return mybatis.selectOne("user.selectFamilyCode", user_id);
     }
 }

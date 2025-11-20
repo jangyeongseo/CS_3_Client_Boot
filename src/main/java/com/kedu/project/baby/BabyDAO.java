@@ -17,11 +17,12 @@ public class BabyDAO {
         return mybatis.selectList("baby.getBabySeqList", dto);
     }
 
-    public BabyDTO babyMypage(BabyDTO dto){
+    public BabyDTO babyMypage(BabyDTO dto) {
         return mybatis.selectOne("baby.babyMypage", dto);
     }
     
-    public BabyDTO selectBabyInfo(int babyseq) {
-    	return mybatis.selectOne("baby.selectBabyInfo",babyseq);
+    public int babyInsert(BabyDTO dto) {
+        return mybatis.insert("baby.babyInsert", dto);
     }
+
 }

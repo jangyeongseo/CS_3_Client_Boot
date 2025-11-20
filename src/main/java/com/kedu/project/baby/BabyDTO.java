@@ -16,7 +16,6 @@ public class BabyDTO {
     private String family_code; // 가족 코드
     private String image_name; // 이미지 종류
     private String status; // 출산 여부
-    private String birthDate; // 출산예정일 또는 생일
-    private String updateAt; // 최근 업데이트 날짜
-    
+    private String birth_date; // 출산예정일 또는 생일
+    private String updated_at; // 최근 업데이트 날짜
 }
