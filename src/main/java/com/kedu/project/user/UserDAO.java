@@ -1,6 +1,7 @@
 package com.kedu.project.user;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +44,13 @@ public class UserDAO {
         return mybatis.update("user.pindPwByEmail", dto);
     }
 
-    public String familyCode(String user_id){
+    public String familyCode(String user_id) {
         return mybatis.selectOne("user.selectFamilyCode", user_id);
+    }
+
+    public int updateLastBabySeq(int last_baby, String id) {
+        return mybatis.update("user.updateLastBabySeq", Map.of(
+                "last_baby", last_baby,
+                "user_id", id));
     }
 }

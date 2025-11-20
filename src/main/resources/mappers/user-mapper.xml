@@ -43,4 +43,8 @@
         select family_code from user where user_id = #{user_id}
     </select>
 
+    <update id="updateLastBabySeq">
+        update user set last_baby = #{last_baby} where user_id = #{user_id}
+    </update>
+
 </mapper>

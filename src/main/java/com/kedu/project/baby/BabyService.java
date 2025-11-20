@@ -41,12 +41,14 @@ public class BabyService {
                 baby.setStatus("fetus");
             }
             System.out.println(baby);
-            int babySeq = dao.babyInsert(baby);
+            dao.babyInsert(baby);
+            int generatedSeq = baby.getBaby_seq();
             if (index == 0) {
-                firstBaby = babySeq;
+                firstBaby = generatedSeq;
             }
             index++;
         }
+        userdao.updateLastBabySeq(firstBaby, id);
         return firstBaby;
     }
 }
