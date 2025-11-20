@@ -1,16 +1,11 @@
 package com.kedu.project.security.jwt;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -32,6 +27,8 @@ public class JWTFilter extends OncePerRequestFilter {
             return;
         }
 
+        
+
         String token = header.substring(7);
         try {
             if (jwt.validateToken(token)) {
@@ -40,7 +37,6 @@ public class JWTFilter extends OncePerRequestFilter {
 
                 // List<SimpleGrantedAuthority> auths = new ArrayList<>(); // 권한 목록 저장용 리스트
                 // for (Integer babySeq : babySeqList) {
-                //     auths.add(new SimpleGrantedAuthority("babySeq" + babySeq));
                 // }
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(id, null);
                         // auths);

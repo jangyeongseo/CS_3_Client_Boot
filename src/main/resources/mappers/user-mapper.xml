@@ -39,4 +39,8 @@
         update user set password = #{password} where email = #{email}
     </update>
 
+    <select id="selectFamilyCode" resultType="String">
+        select family_code from user user_id = #{user_id}
+    </select>
+
 </mapper>

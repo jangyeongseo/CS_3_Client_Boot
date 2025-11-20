@@ -9,4 +9,8 @@
         SELECT baby_seq FROM baby where family_code = #{family_code}
     </select>
 
+    <select id="babyMypage" resultType="com.kedu.project.baby.BabyDTO">
+        SELECT * FROM baby where family_code = #{family_code} and baby_seq = #{baby_seq}
+    </select>
+
 </mapper>

@@ -42,4 +42,8 @@ public class UserDAO {
     public int pindPwByEmail(UserDTO dto) {
         return mybatis.update("user.pindPwByEmail", dto);
     }
+
+    public String familyCode(String id){
+        return mybatis.selectOne("user.selectFamilyCode", id);
+    }
 }
