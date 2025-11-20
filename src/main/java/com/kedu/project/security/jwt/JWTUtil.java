@@ -61,9 +61,9 @@ public class JWTUtil {
 		return data.getSubject();
 	}
 
-	// // withClaim 로 지정한 키값에 해당되는 value 값 뽑기 ( 현재 코드에선 roles로 권한 )
-	// public List<String> getRolesFromToken(String token) {
-	// 	DecodedJWT data = JWT.require(Algorithm.HMAC256(secret)).build().verify(token);
-	// 	return data.getClaim("roles").asList(String.class);
-	// }    
+	// withClaim 로 지정한 키값에 해당되는 value 값 뽑기 ( 현재 코드에선 roles로 권한 )
+	public List<Integer> getRolesFromToken(String token) {
+		DecodedJWT data = JWT.require(Algorithm.HMAC256(secret)).build().verify(token);
+		return data.getClaim("babySeqList").asList(Integer.class);
+	}    
 }

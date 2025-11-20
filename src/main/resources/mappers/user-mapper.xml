@@ -31,8 +31,16 @@
         SELECT * from user where user_id = #{user_id}
     </select>
 
-    <select id="familyCodeChack" resultType="com.kedu.project.user.UserDTO">
-        SELECT family_code from user where family_code = #{family_code}
+    <select id="familyCodeChack" resultType="int">
+        SELECT count(*) from user where family_code = #{family_code}
+    </select>
+
+    <update id="pindPwByEmail">
+        update user set password = #{password} where email = #{email}
+    </update>
+
+    <select id="selectFamilyCode" resultType="String">
+        select family_code from user user_id = #{user_id}
     </select>
 
 </mapper>

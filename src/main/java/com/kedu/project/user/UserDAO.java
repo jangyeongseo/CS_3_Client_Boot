@@ -19,7 +19,7 @@ public class UserDAO {
         return mybatis.selectOne("user.nickNameChack", dto.getNickname());
     }
 
-    public boolean familyCodeChack(String family_code){
+    public int familyCodeChack(String family_code) {
         return mybatis.selectOne("user.familyCodeChack", family_code);
     }
 
@@ -31,11 +31,19 @@ public class UserDAO {
         return mybatis.selectOne("user.login", dto);
     }
 
-    public UserDTO userDataById(UserDTO dto){
+    public UserDTO userDataById(UserDTO dto) {
         return mybatis.selectOne("user.userDataById", dto);
     }
 
     public String pindIdByEmail(UserDTO dto) {
         return mybatis.selectOne("user.pindIdByEmail", dto);
+    }
+
+    public int pindPwByEmail(UserDTO dto) {
+        return mybatis.update("user.pindPwByEmail", dto);
+    }
+
+    public String familyCode(String id){
+        return mybatis.selectOne("user.selectFamilyCode", id);
     }
 }
