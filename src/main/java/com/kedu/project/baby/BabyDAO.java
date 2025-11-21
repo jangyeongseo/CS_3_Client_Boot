@@ -25,4 +25,10 @@ public class BabyDAO {
         return mybatis.insert("baby.babyInsert", dto);
     }
 
+    public BabyDTO selectBabyInfo(int babySeq) {
+        //  mybatis.selectOne(Mapper ID, Parameter) 호출
+    	return mybatis.selectOne("baby.selectBabyInfo", babySeq);
+    }
+    
+    
 }

@@ -21,5 +21,13 @@
         (#{name}, #{gender}, #{family_code}, #{image_name},
          #{status}, #{birth_date}, NOW())
     </insert>
+    
+    <select id="selectBabyInfo" parameterType="int" resultType="com.kedu.project.baby.BabyDTO">
+    SELECT baby_seq, gender, status, birth_date FROM 
+        baby
+    WHERE 
+        baby_seq = #{babySeq}
+</select>
+    
 
 </mapper>

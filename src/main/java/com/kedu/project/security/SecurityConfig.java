@@ -44,7 +44,7 @@ public class SecurityConfig {
     @Bean
 	public CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration config = new CorsConfiguration();
-		config.addAllowedOrigin("http://10.5.5.4:3000"); // 모든 출처 -> 나중에 서버맞춰지면 설정
+		config.addAllowedOrigin("http://10.5.5.5:3000"); // 모든 출처 -> 나중에 서버맞춰지면 설정
 		config.addAllowedMethod("*");
 		config.addAllowedHeader("*");
 
