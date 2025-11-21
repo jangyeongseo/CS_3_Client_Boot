@@ -6,23 +6,31 @@
 <mapper namespace="Board">
 
 	<!--1. 모든 타입 토탈 카운트-->
-	<select id="getTotalAllCount" resultType="int">
-		select count(*) from board
+	<select id="getTotalAllCount" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+	    FROM board
+	    WHERE 1=1
+	    <if test="isAdmin == false">
+	        AND is_privated <![CDATA[ <= ]]> #{is_privated}
+	    </if>
 	</select>
 
 	<!--1-1. 모든 타입 + 검색어 토탈 카운트-->
-	<select id="getTotalAllFindTargetCount" resultType="int">
-		select count(*) 
-		from board 
-		where (title like concat('%', #{target}, '%') 
-		or content like concat('%', #{target}, '%'))
+	<select id="getTotalAllFindTargetCount" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+    	FROM board
+    	WHERE (
+        	title   LIKE concat('%', #{target}, '%')
+        	OR content LIKE concat('%', #{target}, '%')
+    	)
+      	AND is_privated <![CDATA[ <= ]]> #{is_privated}
 	</select>
 
 	<!--2. 특정 타입 토탈 카운트-->
 	<select id="getTotalTypeCount" resultType="int">
 		select count(*) 
 		from board 
-		where board_type=#{board_type}
+		where board_type=#{board_type} and is_privated <![CDATA[ <= ]]> #{is_privated}
 	</select>
 
 	<!--2-1. 특정 타입 + 검색어 토탈 카운트-->
@@ -30,6 +38,7 @@
 		select count(*) 
 		from board 
 		where board_type=#{board_type}
+		and is_privated <![CDATA[ <= ]]> #{is_privated}
 		and (
 			title like concat('%', #{target}, '%') 
 			or content like concat('%', #{target}, '%')
@@ -42,6 +51,9 @@
 		<where>
 			<if test="board_type != null and board_type != '' and board_type != 'all'">
 				board_type = #{board_type}
+			</if>
+			<if test="is_privated != null">
+			    and is_privated <![CDATA[ <= ]]> #{is_privated}
 			</if>
 		</where>
 		order by board_seq desc
@@ -59,9 +71,20 @@
 			<if test="board_type != null and board_type != '' and board_type != 'all'">
 			    and board_type = #{board_type}
 			</if>
+			<if test="is_privated != null">
+			    and is_privated <![CDATA[ <= ]]> #{is_privated}
+			</if>
 		</where>
 		order by board_seq desc
 		limit #{offset}, #{count}
 	</select>
+	
+	<!--4. 보드 작성-->
+	<insert id="postBoard" parameterType="com.kedu.project.board.BoardDTO" useGeneratedKeys="true" keyProperty="board_seq">
+	    insert into board (user_id, board_type, content, title, is_privated, created_at)
+	    values (#{user_id}, #{board_type}, #{content}, #{title}, #{is_privated}, now())
+	</insert>
 
+
+	
 </mapper>

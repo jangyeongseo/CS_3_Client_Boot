@@ -13,17 +13,17 @@ public class BoardDAO {
 	private SqlSession mybatis;
     
     //1. 모든 타입에 대하여 토탈 카운트 계산
-    public int getTotalAllCount () {
-    	return mybatis.selectOne("Board.getTotalAllCount");
+    public int getTotalAllCount (boolean is_privated) {
+    	return mybatis.selectOne("Board.getTotalAllCount",is_privated);
     }
     //1-1. 모든 타입에 대하여 + 검색어 토탈 카운트 계산
-    public int getTotalAllFindTargetCount(String target) {
-    	return mybatis.selectOne("Board.getTotalAllFindTargetCount", target);
+    public int getTotalAllFindTargetCount(Map <String, Object> params) {
+    	return mybatis.selectOne("Board.getTotalAllFindTargetCount", params);
     }
     
     //2. 특정 타입에 대하여 토탈 카운트 계산
-    public int getTotalTypeCount (String board_type) {
-    	return mybatis.selectOne("Board.getTotalTypeCount",board_type);
+    public int getTotalTypeCount (Map <String, Object> params) {
+    	return mybatis.selectOne("Board.getTotalTypeCount",params);
     }
     //2-1. 특정 타입에 대하여 + 검색어 토탈 카운트 계산
     public int getTotalTypeFindTargetCount(Map<String, Object> params) {
@@ -39,6 +39,10 @@ public class BoardDAO {
     	return mybatis.selectList("Board.getBoardListFromToWithTarget",params);
     }
     
-    
+    //4. 보드 작성
+    public int postBoard(BoardDTO dto) {
+        return mybatis.insert("Board.postBoard", dto); 
+    }
+
     
 }

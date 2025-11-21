@@ -1,12 +1,18 @@
 package com.kedu.project.file_info;
 
-import java.security.Timestamp;
 
+
+import java.sql.Timestamp;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class FileDTO {
     private int file_seq;
     private String user_id;
