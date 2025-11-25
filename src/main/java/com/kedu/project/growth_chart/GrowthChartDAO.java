@@ -41,4 +41,8 @@ public class GrowthChartDAO {
         return mybatis.insert(NAMESPACE + ".insertMeasurement", dto);
     }
     
+    public List<Map<String,Object>> getGrowthChartDetail(int baby_seq){
+        return mybatis.selectList(NAMESPACE + ".selectDetail", baby_seq);
+    }
+    
 }

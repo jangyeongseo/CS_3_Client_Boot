@@ -54,4 +54,10 @@
         )
     </insert>
     
+    <select id="selectDetail" parameterType="int" resultType="map">
+    SELECT measure_date, measure_type, measure_value
+    FROM growth_chart
+    WHERE baby_seq = #{baby_seq}
+    ORDER BY measure_date ASC
+</select>
 </mapper>
