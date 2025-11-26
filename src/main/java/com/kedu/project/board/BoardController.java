@@ -11,12 +11,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.kedu.project.comment.CommentService;
 import com.kedu.project.config.PageNaviConfig;
 import com.kedu.project.file_info.FileDTO;
 import com.kedu.project.file_info.FileService;
@@ -33,6 +35,8 @@ public class BoardController {
     private BoardFacadeService boardFacadeService;
     @Autowired
     private FileService fileService;
+    @Autowired
+    private CommentService commentService;
     
     
     
@@ -48,9 +52,11 @@ public class BoardController {
     	
     	//0) 인증정보 조회
     	boolean is_privated=false;
-    	if(!id.equals("anonymousUser")) { //로그인 했다면
-    		is_privated=true;
+    	// 로그인 상태면 멤버글도 허용
+    	if (id != null && !id.equals("anonymousUser")) {
+    	    is_privated = true;
     	}
+    	System.out.println("현재 아이디:"+id);
     	
     	//1) 전체 게시글 개수 조회
     	int totalCount=0;
@@ -103,8 +109,7 @@ public class BoardController {
         @RequestPart(value = "thumbnail", required = false) MultipartFile thumbnail
     ) {
     	//1.파일과 보드를 facade layer로 보내서 트랜잭셔널 처리 : BoardDTO로 묶어서 files랑 같이 보냄
-    	// ** 나중에 진짜 아이디 넣어야 함
-    	BoardDTO dto = BoardDTO.builder().user_id("test1").title(title).content(content).board_type(board_type).is_privated(is_privated).build();
+    	BoardDTO dto = BoardDTO.builder().user_id(id).title(title).content(content).board_type(board_type).is_privated(is_privated).build();
     	int target_seq;
 
     	if(files != null) {
@@ -124,8 +129,14 @@ public class BoardController {
     
     //3. 보드 디테일 가져오기
     @GetMapping("/detail")
-    public ResponseEntity  <Map<String, Object>> getDetailBoard(@RequestParam("seq") int board_seq,@AuthenticationPrincipal String id){
+    public ResponseEntity  <Map<String, Object>> getDetailBoard(
+    		@RequestParam("seq") int board_seq,
+    		@AuthenticationPrincipal String id
+    		){
     	System.out.println(board_seq+"디테일 도착");
+    	
+    	//0. 조회수 증가
+    	boardService.increaseViewCount(board_seq);
 
     	//1. 보드 dto 가져오기 + 보드쓴 사람 닉네임 가져오기
     	Map<String, Object> result =boardService.getDetailBoard(board_seq);
@@ -133,22 +144,58 @@ public class BoardController {
     	//2. 첨부파일들 싹가져오기
     	List<FileDTO> files = fileService.getDetailBoardFile(board_seq, "board");
     	
+    	//3. 댓글 싹 가져오기
+    	List<Map<String, Object>> comments = commentService.getDetailBoardComments(board_seq);
     	
-    	//3. 클라이언트에게 보내기
+    	
+    	//4. 클라이언트에게 보내기
     	Map<String, Object> response = new HashMap<>();
 		response.put("boards", result);
 		response.put("files", files);
+		response.put("comments", comments);
 		return ResponseEntity.ok(response);
     }
     
     
     //4. 보드 삭제하기
     @DeleteMapping("/delete")
-    public ResponseEntity  <Void> deleteDetailBoard(@RequestParam("seq") int board_seq, @AuthenticationPrincipal String id){
-    	//나중에는 이거 지우기
-    	id="test1";
-    	
+    public ResponseEntity  <Void> deleteDetailBoard(
+    		@RequestParam("seq") int board_seq, @AuthenticationPrincipal String id){    	
     	boardFacadeService.deleteBoard(board_seq, id, "board");
+    	return ResponseEntity.ok().build();
+    }
+    
+    //5. 보드 업데이트하기
+    @PutMapping("/update")
+    public ResponseEntity <Void> updateDetailBoard(
+    		@AuthenticationPrincipal String id,
+    	    @RequestParam("board_seq") int board_seq,
+    	    @RequestParam("title") String title,
+    	    @RequestParam("content") String content,
+    	    @RequestParam("board_type") String board_type,
+    	    @RequestParam("is_privated") boolean is_privated,
+
+    	    @RequestParam(value = "files", required = false) MultipartFile[] files,
+    	    @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail,
+    	    @RequestParam(value = "deletedFiles", required = false) String deletedFilesJson,
+    	    @RequestParam(value = "removeThumbnail", required = false) Boolean removeThumbnail,
+    	    @RequestParam(value = "justChanged", required = false) Boolean justChanged
+    		){
+    	
+    	boardFacadeService.updateBoard(
+    			id,
+                board_seq,
+                title,
+                board_type,
+                is_privated,
+                content,
+                thumbnail,
+                removeThumbnail,
+                deletedFilesJson,
+                files,
+                justChanged
+        );
+    	
     	return ResponseEntity.ok().build();
     }
     

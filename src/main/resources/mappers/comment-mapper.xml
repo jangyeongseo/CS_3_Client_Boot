@@ -9,5 +9,54 @@
     <delete id="deleteAllComment">
         delete from comment where board_seq= #{board_seq} 
     </delete>
+    
+    <!--2. 보드 부모 시퀀스로 댓글 전부 가져오기-->
+    <select id="getDetailBoardComments" resultType="map">
+	    SELECT 
+	        c.comment_seq,
+	        c.board_seq,
+	        c.parent_comment_seq,
+	        c.user_id,
+	        c.is_deleted,
+	        c.is_reported,
+	        c.created_at,
+	        c.comment_content,
+	        u.nickname
+	    FROM comment c
+	    JOIN user u ON c.user_id = u.user_id
+	    WHERE c.board_seq = #{board_seq}
+	</select>
+	
+	<!--3. 댓글 인서트 하기-->
+	<insert id="postComment">
+		insert into comment (board_seq, parent_comment_seq, user_id, created_at, comment_content)
+		values (#{board_seq}, #{parent_comment_seq}, #{user_id}, now(), #{comment_content})
+	</insert>
+	
+	<!--4. 사용자랑 타겟 시퀀스로 디티오 가져오기-->
+	<select id="findTargetDTO" resultType="com.kedu.project.comment.CommentDTO">
+		select * from comment where comment_seq=#{comment_seq} and user_id=#{user_id}
+	</select>
+    
+    <!--5. 자식 댓글 개수 가져오기-->
+    <select id="getChildCount" resultType="int">
+    	select count(*) from comment where parent_comment_seq = #{comment_seq}
+    </select>
+	
+	
+	<!--6.자식이 있는 부모댓글 삭제 소프트-->
+	<update id="softDeleteParent">
+		UPDATE comment SET is_deleted = 1 WHERE comment_seq = #{comment_seq}
+	</update>
+	
+	<!--7.ㄹㅇ 삭제-->
+	<delete id="strictDelete">
+		DELETE FROM comment WHERE comment_seq = #{comment_seq}
+	</delete>
+	
+	<!--8. 댓글 수정-->
+	<update id="updateComment">
+		update comment set comment_content =#{comment_content} where user_id = #{user_id} and comment_seq = #{comment_seq}
+	</update>
 
 </mapper>

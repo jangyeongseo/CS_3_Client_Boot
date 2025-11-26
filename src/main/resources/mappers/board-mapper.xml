@@ -108,5 +108,15 @@
 		delete from board where board_seq = #{board_seq} and user_id= #{user_id}
 	</delete>
 	
+	<!--7. 보드 수정-->
+	<update id="updateBoard">
+		update board set title=#{title}, content = #{content}, board_type = #{board_type}, is_privated = #{is_privated} where board_seq = #{board_seq} and user_id= #{user_id}
+	</update>
+	
+	<!--8. 조회수 증가-->
+	<update id="increaseViewCount">
+		update board set view_count = view_count +1
+		where board_seq = #{board_seq}
+	</update>
 	
 </mapper>

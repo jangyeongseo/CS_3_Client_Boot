@@ -47,7 +47,6 @@ public class FileDAO {
     	return mybatis.selectList("File.getDetailBoardFile", params);
     }
     
-    
     //5.부모 시퀀스에 따라서 딸려있는 첨부파일+이미지들 전부 가져오기
     public List<FileDTO> getFilesByParent(Map<String, Object>params) {
     	return mybatis.selectList("File.getFilesByParent", params);
@@ -65,5 +64,25 @@ public class FileDAO {
     //7. sysname으로 삭제하기
     public int deleteFileBySysname(String sysname) {
     	return mybatis.delete("File.deleteFileBySysname",sysname);
+    }
+    
+    //8. 보드시퀀스로 썸네일 가져오기
+    public List<FileDTO> getThumbnailsByBoardSeq (Map<String, Object> params){
+    	return mybatis.selectList("File.getThumbnailsByBoardSeq", params);
+    }
+    
+    //9. 파일 시퀀스로 dto 가져오기
+    public FileDTO getFileBySeq(int file_seq) {
+    	return mybatis.selectOne("File.getFileBySeq", file_seq);
+    }
+    
+    //10. 파일 시퀀스로 db에서 삭제하기
+    public int deleteFileBySeq(int file_seq) {
+    	return mybatis.delete("File.deleteFileBySeq",file_seq);
+    }
+    
+    //11. 시스네임을 dto 가져오기
+    public FileDTO findBySysname(String sysname) {
+    	return mybatis.selectOne("File.findBySysname",sysname);
     }
 }

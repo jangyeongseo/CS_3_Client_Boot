@@ -86,4 +86,14 @@ public class BoardService {
     	return dao.deleteTargetBoard(params);
     }
     
+    //6. 보드 수정
+    public int updateBoard(BoardDTO dto) {
+    	return dao.updateBoard(dto);
+    }
+    
+    //7. 조회수 증가
+    public int increaseViewCount(int board_seq) {
+    	return dao.increaseViewCount(board_seq);
+    }
+    
 }

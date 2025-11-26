@@ -55,4 +55,14 @@ public class BoardDAO {
         return mybatis.delete("Board.deleteTargetBoard", params);
     }
     
+    //7. 보드 수정
+    public int updateBoard(BoardDTO dto) {
+    	return mybatis.update("Board.updateBoard", dto);
+    }
+    
+    //8. 조회수 증가
+    public int increaseViewCount(int board_seq) {
+    	return mybatis.update("Board.increaseViewCount", board_seq);
+    }
+    
 }

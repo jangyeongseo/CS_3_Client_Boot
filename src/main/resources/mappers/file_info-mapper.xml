@@ -74,4 +74,25 @@
 	<delete id="deleteFileBySysname">
 		delete from file_info where sysname = #{sysname}
 	</delete>
+	
+	<!--7. 보드 시퀀스로 board/thumb 가져오기-->
+	<select id="getThumbnailsByBoardSeq" resultType="com.kedu.project.file_info.FileDTO">
+	    select * from file_info where target_type = #{target_type} and target_seq = #{target_seq}
+	</select>
+	
+	<!--8.파일 시퀀스로 dto 가져오기-->
+	<select id="getFileBySeq" resultType="com.kedu.project.file_info.FileDTO">
+	    select * from file_info where file_seq = #{file_seq}
+	</select>
+	
+	<!--9. 파일 시퀀스로 db에서 삭제하기-->
+	<delete id="deleteFileBySeq">
+		delete from file_info where file_seq = #{file_seq}
+	</delete>
+	
+	<!--10. 시스네임으로 dto 가져오기-->
+	<select id="findBySysname" resultType="com.kedu.project.file_info.FileDTO">
+	    select * from file_info where sysname = #{sysname}
+	</select>
+	
 </mapper>

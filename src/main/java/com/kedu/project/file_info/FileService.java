@@ -41,9 +41,6 @@ public class FileService {
             return List.of(); // 빈 배열이면 아예 DAO 호출 차단
         }
         List<FileDTO> result =dao.getThumsFromTo(seqList);
-        for(FileDTO dto : result) {
-        	System.out.println("파일찾아오기"+dto.getFile_seq()+":"+dto.getTarget_seq());
-        }
         
          return result;
     }
@@ -119,7 +116,7 @@ public class FileService {
         }
     }
     
-  //2-2. 파일 임시저장-> 찐 저장으로 바꾸기
+    //2-2. 파일 임시저장-> 찐 저장으로 바꾸기
     public int confirmImg(String imageSysListJson, int target_seq) {
         if (imageSysListJson == null || imageSysListJson.isBlank()) {
             return 0;
@@ -137,6 +134,7 @@ public class FileService {
 
         return dao.confirmImg(params);
     }
+    
     //2-3. 썸네일 사진 저장
     public int saveThumbnail(MultipartFile file, String target_type, int target_seq, String user_id) {
     	System.out.println("savThumbnail 서비스레이어 타겟 시퀀스 들어오는지"+target_seq);
@@ -251,4 +249,66 @@ public class FileService {
         }
         
     }
+    
+    //7. 썸네일 삭제
+    public void deleteThumbnail(int board_seq) {
+        // 1. DB에서 board_seq + target_type = 'board/thumb' 인 파일 조회
+    	Map<String, Object> params = new HashMap<>();
+    	params.put("target_seq", board_seq);
+    	params.put("target_type", "board/thumb");
+        List<FileDTO> thumbs = dao.getThumbnailsByBoardSeq(params); 
+
+        if (thumbs == null || thumbs.isEmpty()) return;
+
+        for (FileDTO t : thumbs) {
+            // GCS 삭제
+            String objectName = t.getTarget_type() + "/" + t.getSysname(); // board/thumb/xxx
+            storage.delete(BlobId.of(bucketName, objectName));
+            // DB 삭제
+            dao.deleteFileBySysname(t.getSysname()); // 시스네임으로 db삭제
+        }
+    }
+    
+    //8.썸네일 교체
+    public void replaceThumbnail(MultipartFile file, String targetType, int boardSeq, String userId) {
+        // 기존 썸네일 있으면 삭제
+        deleteThumbnail(boardSeq);
+        // 새 썸네일 저장 (이미 있는 saveThumbnail 재사용)
+        saveThumbnail(file, targetType, boardSeq, userId);
+    }
+    
+    //9. 시퀀스번호로 삭제
+    public void deleteFileBySeq(int file_seq) {
+        // 1. 파일 정보 조회
+        FileDTO file = dao.getFileBySeq(file_seq);
+        if (file == null) return;
+        // 2. GCS 경로 생성
+        String objectName = file.getTarget_type() + "/" + file.getSysname();
+        // 3. GCS 삭제
+        storage.delete(BlobId.of(bucketName, objectName));
+        // 4. DB 삭제
+        dao.deleteFileBySeq(file_seq);
+    }
+    
+    //9. 썸네일 순서가 변경되엇을시 다시 썸네일 부여
+    public void replaceThumbnailBySysname(String sysname, String target_type, int target_seq, String user_id) {
+        // 1. 기존 썸네일 삭제 (DB + GCS)
+        deleteThumbnail(target_seq);
+
+        // 2. 기존 이미지 파일 정보 조회
+        FileDTO original = dao.findBySysname(sysname);
+        if (original == null) return;
+
+        // 3. 썸네일용 DTO로 재삽입
+        FileDTO thumb = FileDTO.builder()
+                .oriname(original.getOriname())
+                .sysname(original.getSysname())
+                .user_id(user_id)
+                .target_type(target_type + "/thumb")
+                .target_seq(target_seq)
+                .build();
+
+        dao.saveThumbnail(thumb);
+    }
+
 }
