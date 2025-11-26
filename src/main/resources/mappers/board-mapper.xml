@@ -3,10 +3,120 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="test1">
+<mapper namespace="Board">
 
-    <select id="test1" resultType="com.kedu.project.user.UserDTO">
-        SELECT * FROM baby
-    </select>
+	<!--1. 모든 타입 토탈 카운트-->
+	<select id="getTotalAllCount" parameterType="map" resultType="int">
+	    SELECT COUNT(*)
+	    FROM board
+	    WHERE 1=1
+	    <if test="isAdmin == false">
+	        AND is_privated <![CDATA[ <= ]]> #{is_privated}
+	    </if>
+	</select>
 
+	<!--1-1. 모든 타입 + 검색어 토탈 카운트-->
+	<select id="getTotalAllFindTargetCount" parameterType="map" resultType="int">
+		SELECT COUNT(*)
+    	FROM board
+    	WHERE (
+        	title   LIKE concat('%', #{target}, '%')
+        	OR content LIKE concat('%', #{target}, '%')
+    	)
+      	AND is_privated <![CDATA[ <= ]]> #{is_privated}
+	</select>
+
+	<!--2. 특정 타입 토탈 카운트-->
+	<select id="getTotalTypeCount" resultType="int">
+		select count(*) 
+		from board 
+		where board_type=#{board_type} and is_privated <![CDATA[ <= ]]> #{is_privated}
+	</select>
+
+	<!--2-1. 특정 타입 + 검색어 토탈 카운트-->
+	<select id="getTotalTypeFindTargetCount" resultType="int">
+		select count(*) 
+		from board 
+		where board_type=#{board_type}
+		and is_privated <![CDATA[ <= ]]> #{is_privated}
+		and (
+			title like concat('%', #{target}, '%') 
+			or content like concat('%', #{target}, '%')
+		)
+	</select>
+
+	<!--3. 일반 페이징-->
+	<select id="getBoardListFromTo" resultType="com.kedu.project.board.BoardDTO">
+		select * from board
+		<where>
+			<if test="board_type != null and board_type != '' and board_type != 'all'">
+				board_type = #{board_type}
+			</if>
+			<if test="is_privated != null">
+			    and is_privated <![CDATA[ <= ]]> #{is_privated}
+			</if>
+		</where>
+		order by board_seq desc
+		limit #{offset}, #{count}
+	</select>
+
+	<!--3-1. 검색 + 타입 페이징-->
+	<select id="getBoardListFromToWithTarget" resultType="com.kedu.project.board.BoardDTO">
+		select * from board
+		<where>
+			<if test="target != null and target != ''">
+				(title like concat('%', #{target}, '%') 
+				or content like concat('%', #{target}, '%'))
+			</if>
+			<if test="board_type != null and board_type != '' and board_type != 'all'">
+			    and board_type = #{board_type}
+			</if>
+			<if test="is_privated != null">
+			    and is_privated <![CDATA[ <= ]]> #{is_privated}
+			</if>
+		</where>
+		order by board_seq desc
+		limit #{offset}, #{count}
+	</select>
+	
+	<!--4. 보드 작성-->
+	<insert id="postBoard" parameterType="com.kedu.project.board.BoardDTO" useGeneratedKeys="true" keyProperty="board_seq">
+	    insert into board (user_id, board_type, content, title, is_privated, created_at)
+	    values (#{user_id}, #{board_type}, #{content}, #{title}, #{is_privated}, now())
+	</insert>
+
+	<!--5. 보드 디테일 가져오기-->
+	<select id="getDetailBoard" parameterType="map" resultType="map">
+	    select
+	        b.board_seq,
+	        b.board_type,
+	        b.user_id,
+	        b.title,
+	        b.content,
+	        b.is_reported,
+	        b.is_privated,
+	        b.view_count,
+	        b.created_at,
+	        u.nickname
+	    from board b
+	    join user u on b.user_id = u.user_id
+	    where b.board_seq = #{board_seq}
+	</select>
+	
+	<!--6.보드 삭제-->
+	<delete id="deleteTargetBoard">
+		delete from board where board_seq = #{board_seq} and user_id= #{user_id}
+	</delete>
+	
+	<!--7. 보드 수정-->
+	<update id="updateBoard">
+		update board set title=#{title}, content = #{content}, board_type = #{board_type}, is_privated = #{is_privated} where board_seq = #{board_seq} and user_id= #{user_id}
+	</update>
+	
+	<!--8. 조회수 증가-->
+	<update id="increaseViewCount">
+		update board set view_count = view_count +1
+		where board_seq = #{board_seq}
+	</update>
+	
 </mapper>

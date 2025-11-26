@@ -8,4 +8,8 @@ import org.springframework.stereotype.Repository;
 public class ChatBotDAO {
     @Autowired
 	private SqlSession mybatis;    
+
+    public ChatBotDTO answer(String trigger_text){
+        return mybatis.selectOne("chatbot.answer", trigger_text);
+    }
 }

@@ -1,6 +1,5 @@
 package com.kedu.project.healthy_record;
 
-import java.security.Timestamp;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.kedu.project.baby.BabyDAO;
 import com.kedu.project.baby.BabyDTO;
+import com.kedu.project.healthy_record.HealthyRecordDAO;
+import com.kedu.project.healthy_record.HealthyRecordDTO;
 import com.kedu.project.security.crypto.EncryptionUtil;
 import com.kedu.project.security.jwt.JWTUtil;
 
@@ -20,6 +22,9 @@ public class UserService {
 
     @Autowired
     private BabyDAO babydao;
+
+    @Autowired
+    private HealthyRecordDAO healthyRecorddao;
 
     @Autowired
     private JWTUtil jwt;
@@ -73,17 +78,28 @@ public class UserService {
         return dao.userDataById(dto);
     }
 
-    public int mypageUdate(UserDTO dto){
+    public int mypageUdate(UserDTO dto) {
         return dao.mypageUdate(dto);
     }
 
-    public List<BabyDTO> babyListByMypage(String id){
+    public List<BabyDTO> babyListByMypage(String id) {
         String familyCode = dao.familyCode(id);
         return babydao.babyListByMypage(familyCode);
     }
 
-    public int changeBaby(UserDTO dto){
+    public int changeBaby(UserDTO dto) {
         return dao.changeBaby(dto);
+    }
+
+    public List<HealthyRecordDTO> eventList(int babySeq, String id) {
+        HealthyRecordDTO dto = new HealthyRecordDTO();
+        dto.setBaby_seq(babySeq);
+        dto.setUser_id(id);
+        return healthyRecorddao.eventList(dto);
+    }
+
+    public int eventDelete(HealthyRecordDTO dto) {
+        return healthyRecorddao.eventDelete(dto);
     }
 
     public String familyCodeMake() {

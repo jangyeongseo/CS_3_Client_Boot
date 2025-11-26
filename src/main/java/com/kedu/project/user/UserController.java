@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.kedu.project.baby.BabyDTO;
+import com.kedu.project.healthy_record.HealthyRecordDTO;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -78,4 +80,15 @@ public class UserController {
         return ResponseEntity.ok(userService.changeBaby(dto));
     }
 
+    @GetMapping("/eventList")
+    public ResponseEntity<List<HealthyRecordDTO>> eventList(@RequestParam("baby_seq") int babySeq,
+            @AuthenticationPrincipal String id) {
+        return ResponseEntity.ok(userService.eventList(babySeq, id));
+    }
+
+    @PostMapping("/eventDelete")
+    public ResponseEntity<Integer> eventDelete(@RequestBody HealthyRecordDTO dto, @AuthenticationPrincipal String id) {
+        dto.setUser_id(id);
+        return ResponseEntity.ok(userService.eventDelete(dto));
+    }
 }

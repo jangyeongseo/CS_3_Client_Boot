@@ -46,7 +46,9 @@ public class SecurityConfig {
 		CorsConfiguration config = new CorsConfiguration();
 
 		config.addAllowedOrigin("http://10.5.5.5:3000"); // 모든 출처 -> 나중에 서버맞춰지면 설정
-		config.addAllowedOrigin("http://10.5.5.4:3000"); 
+		config.addAllowedOrigin("http://10.5.5.4:3000");
+		config.addAllowedOrigin("http://10.10.55.103:3000"); // 모든 출처 -> 나중에 서버맞춰지면 설정
+		config.addAllowedOrigin("http://10.5.5.4:3000"); // 모든 출처 -> 나중에 서버맞춰지면 설정
 		config.addAllowedOrigin("http://10.10.55.89:3000");
 		config.addAllowedOrigin("http://192.168.55.90:3000");
         config.addAllowedMethod("*");
