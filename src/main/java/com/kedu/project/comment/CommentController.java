@@ -22,7 +22,7 @@ public class CommentController {
     @PostMapping
     public ResponseEntity<Void> postComment(@RequestBody CommentDTO dto, @AuthenticationPrincipal String id){
     	commentService.postComment(dto,id);
-    	
+    	System.out.println(dto);
     	return ResponseEntity.ok().build();
     }
     
