@@ -2,7 +2,9 @@ package com.kedu.project.baby;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -71,6 +73,18 @@ public class BabyService {
         } else {
             return "fetus";
         }
+    }
+    
+    
+    
+    //-----------지원 아기 시퀀스+부모 아이디로 출산예정일 or 생일 가져오기
+    public String babyDueDate(int baby_seq, String id) {
+    	String familyCode = userdao.familyCode(id);  	
+    	Map<String, Object> params = new HashMap<>();
+    	params.put("baby_seq", baby_seq);
+    	params.put("family_code", familyCode);
+    	
+    	return dao.babyDueDate(params);
     }
 
 }

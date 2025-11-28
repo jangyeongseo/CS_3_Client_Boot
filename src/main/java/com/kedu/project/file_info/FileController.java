@@ -49,8 +49,6 @@ public class FileController {
         @RequestParam("target_type") String targetType,
         @AuthenticationPrincipal String id
     ) {
-    	//나중에 지워야함
-    	id="test1";
     	
         String url = fileService.uploadTempFile(file, targetType, id);
         return ResponseEntity.ok(Map.of("url", url));

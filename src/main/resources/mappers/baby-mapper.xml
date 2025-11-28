@@ -31,4 +31,9 @@
         where family_code = #{family_code} and baby_seq = #{baby_seq}
     </update>
 
+
+	<!--지원 아기 시퀀스+부모 아이디로 출산예정일 or 생일 가져오기-->
+	<select id="babyDueDate" resultType="String">
+		select birth_date from baby where family_code= #{family_code} and baby_seq = #{baby_seq} 
+	</select>
 </mapper>

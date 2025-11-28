@@ -8,4 +8,10 @@ import org.springframework.stereotype.Repository;
 public class PregnancyJournalDAO {
     @Autowired
 	private SqlSession mybatis;    
+    
+    
+    //1. 산모수첩 입력
+    public int postDiary(PregnancyJournalDTO dto) {
+    	return mybatis.insert("PregnancyJournal.postDiary", dto);
+    }
 }

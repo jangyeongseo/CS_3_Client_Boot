@@ -5,12 +5,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/baby")
 @RestController
@@ -34,6 +34,13 @@ public class BabyController {
     @PostMapping("/babypageUpdate")
     public ResponseEntity<Integer> babypageUpdate(@RequestBody BabyDTO dto, @AuthenticationPrincipal String id) {
         return ResponseEntity.ok(babyService.babypageUpdate(dto, id));
+    }
+    
+    
+  //-----------지원 아기 시퀀스+부모 아이디로 출산예정일 or 생일 가져오기
+    @GetMapping("/date")
+    public ResponseEntity<String> babyDueDate(@RequestParam("seq") int baby_seq, @AuthenticationPrincipal String id) {
+        return ResponseEntity.ok(babyService.babyDueDate(baby_seq, id));
     }
 
 }
