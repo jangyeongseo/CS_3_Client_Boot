@@ -28,7 +28,7 @@ public class UserController {
         return ResponseEntity.ok(userService.idChack(dto));
     }
 
-    @PostMapping("/nickNameChack")
+    @PostMapping("/nicknameChack")
     public ResponseEntity<Integer> nickNameChack(@RequestBody UserDTO dto) {
         return ResponseEntity.ok(userService.idChack(dto));
     }
