@@ -47,7 +47,8 @@ public class SecurityConfig {
 
 		config.addAllowedOrigin("http://10.10.55.103:3000"); // 모든 출처 -> 나중에 서버맞춰지면 설정
 		config.addAllowedOrigin("http://10.5.5.4:3000"); // 모든 출처 -> 나중에 서버맞춰지면 설정
-		config.addAllowedOrigin("http://10.10.55.89:3000");
+		config.addAllowedOrigin("http://192.168.0.10:3000");
+		config.addAllowedOrigin("http://10.5.5.0:3000");
         config.addAllowedMethod("*");
 		config.addAllowedHeader("*");
         config.setAllowCredentials(true);

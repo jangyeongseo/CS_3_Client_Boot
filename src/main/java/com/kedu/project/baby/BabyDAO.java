@@ -1,6 +1,7 @@
 package com.kedu.project.baby;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,12 @@ public class BabyDAO {
 
     public int babypageUpdate(BabyDTO dto){
         return mybatis.update("baby.babypageUpdate", dto);
+    }
+    
+    
+  //-----------지원 아기 시퀀스+부모 아이디로 출산예정일 or 생일 가져오기
+    public String babyDueDate(Map<String, Object> params) {
+    	return mybatis.selectOne("baby.babyDueDate", params);
     }
 
 }
