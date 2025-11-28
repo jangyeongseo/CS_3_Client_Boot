@@ -67,7 +67,7 @@ public class GrowthChartService {
 	}
 
 
-	public Map<String, Float> getActualDataByRange(int babyId, LocalDate startDate, LocalDate endDate) {
+	public Map<String, Object> getActualDataByRange(int babyId, LocalDate startDate, LocalDate endDate) {
 
 		// 1. 🔍 DAO 호출 준비
 		System.out.println("babyId=" + babyId + ", start=" + startDate + ", end=" + endDate);
@@ -88,12 +88,13 @@ public class GrowthChartService {
 			return new HashMap<>(); // 실측 데이터 없으면 빈 맵 반환
 		}
 
-		Map<String, Float> actualDataMap = records.stream()
+		Map<String, Object> actualDataMap = records.stream()
 				.collect(Collectors.toMap(
 						GrowthChartDTO::getMeasure_type, 
 						GrowthChartDTO::getMeasure_value
 						));
-
+		
+		actualDataMap.put("measure_date", records.get(0).getMeasure_date());
 		return actualDataMap;
 	}
 

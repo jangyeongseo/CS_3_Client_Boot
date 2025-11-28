@@ -53,14 +53,14 @@ public class GrowthChartController {
 	// total chart 데이터 조회
 	
 	@GetMapping("/total") 
-	public ResponseEntity<Map<String, Float>> getTotalChartData(
+	public ResponseEntity<Map<String, Object>> getTotalChartData(
 			@RequestParam("babyId") int babyId,
 	        @RequestParam("startDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
 	        @RequestParam("endDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate)
 			{
 		try {
 			 // DB에서 주차 범위에 맞는 데이터 조회
-	        Map<String, Float> actualDataMap = growthChartService.getActualDataByRange(babyId, startDate, endDate);
+	        Map<String, Object> actualDataMap = growthChartService.getActualDataByRange(babyId, startDate, endDate);
 	        // 결과를 항상 0으로 채워서 반환할 최종 Map
 	        Map<String, Float> resultMap = new LinkedHashMap<>();
 	        LocalDate date = startDate;
@@ -68,7 +68,7 @@ public class GrowthChartController {
 	        // 📌 기간 내 주차 Loop → 값 없다면 0으로 채움
 	        while (!date.isAfter(endDate)) {
 	            String weekKey = "Week " + week;
-	            Float value = actualDataMap.getOrDefault(weekKey, 0f);
+	            Float value = (Float)actualDataMap.getOrDefault(weekKey, 0f);
 	            resultMap.put(weekKey, value);
 	            date = date.plusDays(7);
 	            week++;
