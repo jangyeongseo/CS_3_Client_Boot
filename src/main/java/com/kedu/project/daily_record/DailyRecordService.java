@@ -7,4 +7,9 @@ import org.springframework.stereotype.Service;
 public class DailyRecordService {
     @Autowired
     private DailyRecordDAO dao;
+    
+    
+    
+    
+    
 }

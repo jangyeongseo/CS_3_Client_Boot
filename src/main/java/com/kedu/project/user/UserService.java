@@ -55,10 +55,12 @@ public class UserService {
         String babySeq = String.valueOf(user.getLast_baby());
         System.out.println(babySeq);
         String token = jwt.createToken(dto.getUser_id());
+        String familCode = dao.familyCode(dto.getUser_id());
 
         Map<String, String> map = new HashMap<>();
         map.put("token", token);
         map.put("babySeq", babySeq);
+        map.put("babyDueDate",babydao.babyDueDate(familCode, babySeq));
 
         return map;
     }

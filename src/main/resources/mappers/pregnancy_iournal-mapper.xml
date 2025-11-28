@@ -3,10 +3,11 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="test8">
+<mapper namespace="PregnancyJournal">
 
-    <select id="test8" resultType="com.kedu.project.user.UserDTO">
-        SELECT * FROM baby
-    </select>
+    <insert id="postDiary">
+        insert into pregnancy_journal (baby_seq, user_id, pregnancy_week, record_datetime, title, content)
+        values (#{baby_seq},#{user_id},#{pregnancy_week}, now(),#{title},#{content})
+    </insert>
 
 </mapper>

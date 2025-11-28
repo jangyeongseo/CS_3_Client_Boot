@@ -53,4 +53,9 @@ public class CommentDAO {
     	return mybatis.update("Comment.updateComment", dto);
     }
 
+    // 혜빈 추가
+      public String getCommentWriterId(int commentSeq){
+        return mybatis.selectOne("Comment.getCommentWriterId", commentSeq);
+    }
+
 }
