@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="report">
+
+    <insert id="reportBoard">
+        INSERT INTO report (user_id, board_seq, report_type)
+        VALUES (#{user_id}, #{board_seq}, #{report_type})
+    </insert>
+
+    <insert id="reportComment">
+        INSERT INTO report (user_id, comment_seq, report_type)
+        VALUES (#{user_id}, #{comment_seq}, #{report_type})
+    </insert>
+
+</mapper>

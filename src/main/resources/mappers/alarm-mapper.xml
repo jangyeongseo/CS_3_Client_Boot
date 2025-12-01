@@ -5,7 +5,7 @@
 
 <mapper namespace="alarm">
 
-    <insert id="insertAlarm" useGeneratedKeys="true" keyProperty="alarm_seq">
+    <insert id="saveAlarm" useGeneratedKeys="true" keyProperty="alarm_seq">
         INSERT INTO alarm (user_id, board_seq, comment_seq, type)
         VALUES (#{user_id}, #{board_seq}, #{comment_seq}, #{type})
     </insert>
