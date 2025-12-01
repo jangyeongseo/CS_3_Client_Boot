@@ -60,4 +60,14 @@
     WHERE baby_seq = #{baby_seq}
     ORDER BY measure_date ASC
 </select>
+
+	<update id="updateChart">
+    UPDATE growth_chart
+    SET measure_value = #{value}, update_at = NOW()
+    WHERE baby_seq = #{babySeq}
+      AND user_id = #{userId}
+      AND measure_date = #{date}
+      AND measure_type = #{type}
+	</update>
+
 </mapper>

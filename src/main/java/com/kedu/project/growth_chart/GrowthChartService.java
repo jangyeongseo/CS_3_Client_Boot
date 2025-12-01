@@ -23,14 +23,14 @@ public class GrowthChartService {
 	private static final int MAX_DAYS_AGO = 7;
 
 
-	@Transactional // 🚨 5개 DTO 중 하나라도 실패하면 전체 롤백
+	@Transactional //  5개 DTO 중 하나라도 실패하면 전체 롤백
 	public void insertGrowth(List<GrowthChartDTO> dtoList) throws IllegalArgumentException, IllegalStateException {
 
 		if (dtoList == null || dtoList.isEmpty()) {
 			throw new IllegalArgumentException("입력할 데이터가 없습니다.");
 		}
 
-		// 🚨 1. 핵심 검증 데이터 추출 (모든 DTO는 동일한 날짜와 baby_seq를 가짐)
+		//  1. 핵심 검증 데이터 추출 (모든 DTO는 동일한 날짜와 baby_seq를 가짐)
 		GrowthChartDTO firstDto = dtoList.get(0);
 		int babySeq = firstDto.getBaby_seq();
 
@@ -39,14 +39,14 @@ public class GrowthChartService {
 		LocalDate measureDate = firstDto.getMeasure_date().toLocalDateTime().toLocalDate(); 
 		LocalDate today = LocalDate.now();
 
-		// 2. 🛡️ 시간 잠금 검증 (Time Lock)
+		// 2.  시간 잠금 검증 (Time Lock)
 		// 입력 날짜가 오늘보다 7일 이상 과거인지 확인
 		long daysDifference = ChronoUnit.DAYS.between(measureDate, today);
 		if (daysDifference > MAX_DAYS_AGO || daysDifference < 0) { // 7일 초과 또는 미래 날짜 방지
 			throw new IllegalArgumentException("입력 가능한 날짜 범위를 초과했습니다. (7일 이내만 허용)");
 		}	
 
-		// 3. 🚨 중복 데이터 검증 (Duplication Check)
+		// 3.  중복 데이터 검증 (Duplication Check)
 		Map<String, Object> countParams = new HashMap<>();
 		countParams.put("baby_seq", babySeq);
 		countParams.put("measureDate", Date.valueOf(measureDate)); // DAO에 SQL Date로 전달
@@ -55,7 +55,7 @@ public class GrowthChartService {
 			throw new IllegalStateException("해당 날짜에 이미 측정 기록이 존재합니다. 중복 입력 불가.");
 		}
 
-		// 4. 💾 5개 DTO를 DB에 개별 INSERT (트랜잭션 실행)
+		// 4.  5개 DTO를 DB에 개별 INSERT (트랜잭션 실행)
 		for (GrowthChartDTO dto : dtoList) {
 			int result = growthChartDAO.insertMeasurement(dto); 
 
@@ -69,7 +69,7 @@ public class GrowthChartService {
 
 	public Map<String, Object> getActualDataByRange(int babyId, LocalDate startDate, LocalDate endDate) {
 
-		// 1. 🔍 DAO 호출 준비
+		// 1.  DAO 호출 준비
 		System.out.println("babyId=" + babyId + ", start=" + startDate + ", end=" + endDate);
 		
 		
@@ -80,10 +80,10 @@ public class GrowthChartService {
 		daoParams.put("endDate", java.sql.Date.valueOf(endDate));    
 
 		// 2. DAO 호출 및 데이터 조회
-		// 🚨 growthChartDAO.selectLatestMeasurementsByDateRange 메소드는 이미 구현되어 있어야 합니다.
+		//  growthChartDAO.selectLatestMeasurementsByDateRange 메소드는 이미 구현되어 있어야 합니다.
 		List<GrowthChartDTO> records = growthChartDAO.selectLatestMeasurementsByDateRange(daoParams);
 
-		// 3. 📊 기록을 Map<String, Float>으로 가공 (React actualData props 형태)
+		// 3.  기록을 Map<String, Float>으로 가공 (React actualData props 형태)
 		if (records.isEmpty()) {
 			return new HashMap<>(); // 실측 데이터 없으면 빈 맵 반환
 		}
@@ -118,5 +118,25 @@ public class GrowthChartService {
 	    return new ArrayList<>(grouped.values());
 	}
 
+	public void updateChart(int babySeq, Map<String, Object> updates) {
 
+	    String userId = (String) updates.get("id");
+	    String date = (String) updates.get("measure_date");
+
+	    updates.remove("id");
+	    updates.remove("measure_date");
+
+	    updates.forEach((type, value) -> {
+	        growthChartDAO.updateChart(
+	                babySeq,
+	                userId,
+	                date,
+	                type,
+	                Float.parseFloat(value.toString())
+	        );
+	    });
+	}
+
+	
+	
 }
