@@ -115,9 +115,9 @@ public class GrowthChartController {
 	 @PatchMapping("/chart/update/{babySeq}")
 	 public ResponseEntity<?> updateGrowthChart(
 	         @PathVariable int babySeq,
-	         @RequestBody Map<String, Object> updates
+	         @RequestBody List<GrowthChartDTO> updates
 	 ) {
-	     growthChartService.updateChart(babySeq, updates);
+	     growthChartService.updateGrowthChart(updates);
 	     return ResponseEntity.ok("updated");
 	 }
 	 

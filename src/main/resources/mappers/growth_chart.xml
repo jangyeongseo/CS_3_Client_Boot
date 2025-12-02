@@ -61,13 +61,14 @@
     ORDER BY measure_date ASC
 </select>
 
-	<update id="updateChart">
+	<update id="updateChart" parameterType="com.kedu.project.growth_chart.GrowthChartDTO">
     UPDATE growth_chart
-    SET measure_value = #{value}, update_at = NOW()
-    WHERE baby_seq = #{babySeq}
-      AND user_id = #{userId}
-      AND measure_date = #{date}
-      AND measure_type = #{type}
-	</update>
+    SET measure_value = #{measure_value},
+        update_at = NOW()
+    WHERE baby_seq = #{baby_seq}
+      AND user_id = #{user_id}
+      AND measure_type = #{measure_type}
+      AND DATE(measure_date) = DATE(#{measure_date})
+</update>
 
 </mapper>

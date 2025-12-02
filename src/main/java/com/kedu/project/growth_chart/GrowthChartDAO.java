@@ -45,8 +45,8 @@ public class GrowthChartDAO {
         return mybatis.selectList(NAMESPACE + ".selectDetail", baby_seq);
     }
     
-    public void updateChart(int babySeq, String userId, String date, String type, float value) {
-    	mybatis.update(NAMESPACE + ".updateChart",babySeq, userId, date, type, value);
+    public void updateGrowthChart(GrowthChartDTO dto) {
+    	mybatis.update(NAMESPACE + ".updateChart",dto);
     }
     
 }

@@ -118,23 +118,12 @@ public class GrowthChartService {
 	    return new ArrayList<>(grouped.values());
 	}
 
-	public void updateChart(int babySeq, Map<String, Object> updates) {
-
-	    String userId = (String) updates.get("id");
-	    String date = (String) updates.get("measure_date");
-
-	    updates.remove("id");
-	    updates.remove("measure_date");
-
-	    updates.forEach((type, value) -> {
-	        growthChartDAO.updateChart(
-	                babySeq,
-	                userId,
-	                date,
-	                type,
-	                Float.parseFloat(value.toString())
-	        );
-	    });
+	public void updateGrowthChart(List<GrowthChartDTO> updates) {
+		
+		 for (GrowthChartDTO dto : updates) {
+		        growthChartDAO.updateGrowthChart(dto);
+		    }
+	   
 	}
 
 	
