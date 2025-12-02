@@ -52,6 +52,7 @@ public class BoardService {
     	
     	return dao.getBoardListFromTo(params);
     }
+    
     //2-2. 페이징 계산된 게시글 + 검색어 기준
     public List<BoardDTO> getBoardListFromToWithTarget(String board_type, int offset, int count, String target,boolean is_privated ){
     	Map<String, Object> params= new HashMap<>();

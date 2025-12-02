@@ -27,13 +27,18 @@ public class PregnancyJournalFacadeService {
 	
 	//삭제
 	public int deleteTargetDTO(String id, int journal_seq) {
-		int deleted = pregnancyJournalService.deleteTargetDTO(id, journal_seq);
-		System.out.println("글 삭제 결과 = " + deleted);
-
-		int fileDeleted = fServ.deleteAllFile(journal_seq, id, "diary/img");
-		System.out.println("파일 삭제 결과 = " + fileDeleted);
-
-		return fileDeleted;
+		pregnancyJournalService.deleteTargetDTO(id, journal_seq);
+		return fServ.deleteAllFile(journal_seq, id, "diary/img");
 	}
+	
+	
+	//업데이트
+	public void updateJournal(PregnancyJournalDTO dto, String imageSysListJson) {
+		pregnancyJournalService.updateJournal(dto); //dto 수정
+		fServ.syncBoardImages(imageSysListJson, dto.getJournal_seq(), dto.getUser_id(), "diary/img");
+		
+	}
+	
+	
 	
 }

@@ -71,16 +71,19 @@ public class PregnancyJournalService {
     	
     	if(result!=null) {
     		Map<String, Object> finalResult = dao.getTargetDTO(journal_seq);
-    		System.out.println(finalResult.get("nickname"));
     		return finalResult;
     	}
     	return null;
     }
     
-    
     //4.삭제
     public int deleteTargetDTO(String id, int journal_seq) {
     	return dao.deleteTargetDTO(id, journal_seq);
+    }
+    
+    //5. 업데이트
+    public int updateJournal(PregnancyJournalDTO dto) {
+    	return dao.updateJournal(dto);
     }
     
 }

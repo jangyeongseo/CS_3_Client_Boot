@@ -37,4 +37,10 @@
 	<delete id="deleteTargetDTO">
 		delete from pregnancy_journal where journal_seq =#{journal_seq} and user_id=#{user_id}
 	</delete>
+	
+	<!--5. 업데이트 -->
+	<update id="updateJournal">
+		update pregnancy_journal set title=#{title}, content = #{content} where journal_seq =#{journal_seq}
+	</update>
+	
 </mapper>

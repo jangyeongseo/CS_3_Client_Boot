@@ -36,8 +36,11 @@ public class BabyController {
         return ResponseEntity.ok(babyService.babypageUpdate(dto, id));
     }
     
+  //-----------지원 아기인덱스에서 아기 dto 꺼내오기
+
     
-//   //-----------지원 아기 시퀀스+부모 아이디로 출산예정일 or 생일 가져오기
+    
+//   
 //     @GetMapping("/date")
 //     public ResponseEntity<String> babyDueDate(@RequestParam("seq") int baby_seq, @AuthenticationPrincipal String id) {
 //         return ResponseEntity.ok(babyService.babyDueDate(baby_seq, id));

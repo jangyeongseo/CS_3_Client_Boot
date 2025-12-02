@@ -54,7 +54,8 @@ public class BoardFacadeService {
 		    Boolean removeThumbnail,  
 		    String deletedFiles,
 		    MultipartFile[] files,
-		    Boolean justChanged
+		    Boolean justChanged,
+		    String imageSysListJson
 		) {
 		//1. board db내용 수정
 		BoardDTO bDto= BoardDTO.builder().user_id(id).board_seq(board_seq).title(title).board_type(board_type).is_privated(is_privated).content(content).build();
@@ -94,6 +95,9 @@ public class BoardFacadeService {
 	    if (files != null && files.length > 0) {
 	        fServ.insert(files, "board", board_seq, id);
 	    }
+	    
+	    // 5.에디터 내 이미지타입 싱크
+	    fServ.syncBoardImages(imageSysListJson, board_seq, id, "board/img");
 	}
 	
 	

@@ -36,4 +36,9 @@ public class PregnancyJournalDAO {
                  "journal_seq", journal_seq));
     }
     
+    //5. 업데이트
+    public int updateJournal(PregnancyJournalDTO dto) {
+    	return mybatis.update("PregnancyJournal.updateJournal", dto);
+    }
+    
 }

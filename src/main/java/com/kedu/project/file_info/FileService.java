@@ -35,8 +35,6 @@ public class FileService {
     
     //1. 보드 시퀀스로 썸네일 파일리스트 뽑아오기
     public List<FileDTO> getThumsFromTo (List<Integer> seqList) {
-    	System.out.println(seqList.get(0));
-    	System.out.println(seqList.getLast());
         if(seqList == null || seqList.isEmpty()) { 
             return List.of(); // 빈 배열이면 아예 DAO 호출 차단
         }
@@ -137,7 +135,6 @@ public class FileService {
     
     //2-3. 썸네일 사진 저장
     public int saveThumbnail(MultipartFile file, String target_type, int target_seq, String user_id) {
-    	System.out.println("savThumbnail 서비스레이어 타겟 시퀀스 들어오는지"+target_seq);
         try {
             String oriname = file.getOriginalFilename();
             String sysname = UUID.randomUUID() + "_" + oriname;
@@ -163,6 +160,68 @@ public class FileService {
             throw new RuntimeException("임시 파일 업로드 중 오류", e);
         }
     } 
+
+    // 2-4. board/img 업데이트용 싱크 로직
+    public void syncBoardImages(String imageSysListJson, int targetSeq, String userId, String target_type) {
+        // 0. 이미지 리스트 없음 → 기존 이미지를 전부 삭제
+        if (imageSysListJson == null || imageSysListJson.isBlank()) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("target_seq", targetSeq);
+            params.put("target_type", target_type);
+            params.put("user_id", userId);
+
+            List<FileDTO> currentImgs = dao.getFilesByParent(params);
+
+            if (currentImgs != null) {
+                for (FileDTO img : currentImgs) {
+                    String objectName = img.getTarget_type() + "/" + img.getSysname();
+                    storage.delete(BlobId.of(bucketName, objectName));
+                    dao.deleteFileBySysname(img.getSysname());
+                }
+            }
+            return;
+        }
+
+        // 1. 프론트에서 받은 새로운 sysname 리스트
+        List<String> newSysList = gson.fromJson(
+                imageSysListJson,
+                new TypeToken<List<String>>() {}.getType()
+        );
+
+        // 2. 현재 DB에 묶인 이미지를 가져옴
+        Map<String, Object> params = new HashMap<>();
+        params.put("target_seq", targetSeq);
+        params.put("target_type", target_type);
+        params.put("user_id", userId);
+        List<FileDTO> currentImgs = dao.getFilesByParent(params);
+
+        
+        // 3. DB에는 있는데 newSysList에는 없는 이미지 → 삭제
+        if (currentImgs != null) {
+            for (FileDTO img : currentImgs) {
+                if (!newSysList.contains(img.getSysname())) {
+                    String objectName = img.getTarget_type() + "/" + img.getSysname();
+                    storage.delete(BlobId.of(bucketName, objectName));
+                    dao.deleteFileBySysname(img.getSysname());
+                }
+            }
+        }
+
+
+        // 4. 남아 있는 이미지가 없다면 confirmImg 불필요 → 종료
+        if (newSysList.isEmpty()) {
+            return;
+        }
+
+
+        // 5. 임시파일(board/img, seq=null) 중 newSysList에 포함된 애들만 확정
+        Map<String, Object> confirmParams = new HashMap<>();
+        confirmParams.put("imageSysList", newSysList);
+        confirmParams.put("target_seq", targetSeq);
+
+        dao.confirmImg(confirmParams);
+    }
+
     
     // 3. 파일 다운로드용 링크 받기 : 시스네임으로 구별
     public Map<String, Object> getFileStream(String sysname, String file_type) {
@@ -200,11 +259,7 @@ public class FileService {
     	params1.put("target_seq", target_seq);
     	params1.put("target_type", target_type);
     	params1.put("user_id", user_id);
-    	System.out.println("삭제 target_seq = " + target_seq);
-    	System.out.println("삭제 user_id = " + user_id);
-    	System.out.println("삭제 target_type = " + target_type);
     	List<FileDTO> files = dao.getFilesByParent(params1);
-    	System.out.println(files+"부모시퀀스 딸린 첨부파일 이미지 배열존재여부");
     	
         if (files == null || files.isEmpty()) return 0;
         
@@ -228,7 +283,7 @@ public class FileService {
     }
     
     //6. 새벽 4시마다 미리보기용 임시파일 db+gcs정리
-    @Scheduled (cron="0 49 09 * * *")
+    @Scheduled (cron="0 49 08 * * *")
     public void cleanUpTemp() {
     	// 1. created_at + target_seq 가 null인 파일 목록 가져오기
     	List<FileDTO> files =dao.getTempFiles();

@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequestMapping("/diary")
 @RestController
@@ -63,11 +65,10 @@ public class PregnancyJournalController {
     		@PathVariable int journal_seq,
     		@RequestHeader("BABY") int babySeq
     		){
-    	System.out.println(id+":"+journal_seq+":"+babySeq);
     	return ResponseEntity.ok(pregnancyJournalService.getTargetDTO(id, journal_seq,babySeq));
     }
     
-  //시퀀스로 dto 지우기
+    //시퀀스로 dto 지우기
     @DeleteMapping("/{journal_seq}")
     public ResponseEntity<Integer> deleteTargetDTO(
     		@AuthenticationPrincipal String id,
@@ -76,5 +77,26 @@ public class PregnancyJournalController {
     	return ResponseEntity.ok(pregnancyJournalFService.deleteTargetDTO(id, journal_seq));
     }
     
+    //산모수첩 업데이트
+    //5. 보드 업데이트하기
+    @PutMapping
+    public ResponseEntity <Void> updateDetailBoard(
+    		@RequestParam("title") String title,
+    		@RequestParam("content") String content,
+            @RequestParam(value = "imageSysList", required = false) String imageSysListJson,
+            @RequestParam("pregnancy_week") String pregnancy_week,
+            @RequestParam("baby_seq") String baby_seq,
+            @RequestParam("journal_seq") String journal_seq,
+            @AuthenticationPrincipal String id
+    		){
+    	PregnancyJournalDTO dto =PregnancyJournalDTO.builder().title(title).content(content)
+    			.journal_seq(Integer.parseInt(journal_seq))
+    			.pregnancy_week(Integer.parseInt(pregnancy_week))
+    			.baby_seq(Integer.parseInt(baby_seq))
+    			.user_id(id).build();
+    	pregnancyJournalFService.updateJournal(dto,imageSysListJson);
+    	
+    	return ResponseEntity.ok().build();
+    }
     
 }

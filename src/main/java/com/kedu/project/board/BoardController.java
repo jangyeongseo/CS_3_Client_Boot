@@ -56,7 +56,6 @@ public class BoardController {
     	if (id != null && !id.equals("anonymousUser")) {
     	    is_privated = true;
     	}
-    	System.out.println("현재 아이디:"+id);
     	
     	//1) 전체 게시글 개수 조회
     	int totalCount=0;
@@ -133,7 +132,6 @@ public class BoardController {
     		@RequestParam("seq") int board_seq,
     		@AuthenticationPrincipal String id
     		){
-    	System.out.println(board_seq+"디테일 도착");
     	
     	//0. 조회수 증가
     	boardService.increaseViewCount(board_seq);
@@ -179,9 +177,10 @@ public class BoardController {
     	    @RequestParam(value = "thumbnail", required = false) MultipartFile thumbnail,
     	    @RequestParam(value = "deletedFiles", required = false) String deletedFilesJson,
     	    @RequestParam(value = "removeThumbnail", required = false) Boolean removeThumbnail,
-    	    @RequestParam(value = "justChanged", required = false) Boolean justChanged
+    	    @RequestParam(value = "justChanged", required = false) Boolean justChanged,
+    	    @RequestParam(value = "imageSysList", required = false) String imageSysListJson
     		){
-    	
+
     	boardFacadeService.updateBoard(
     			id,
                 board_seq,
@@ -193,9 +192,9 @@ public class BoardController {
                 removeThumbnail,
                 deletedFilesJson,
                 files,
-                justChanged
+                justChanged,
+                imageSysListJson
         );
-    	
     	return ResponseEntity.ok().build();
     }
     
