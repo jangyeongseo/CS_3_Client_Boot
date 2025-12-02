@@ -16,13 +16,21 @@
 
     <delete id="deleteAlarm">
         delete from alarm
-        where board_seq = #{board_seq}
-        <if test="comment_seq != null">
-            and comment_seq = #{comment_seq}
-        </if>
-        <if test="comment_seq == null">
-            and comment_seq is null
-        </if>
+        <where>
+            <if test="board_seq != null">
+                board_seq = #{board_seq}
+            </if>
+            <if test="board_seq == null">
+                board_seq is null
+            </if>
+
+            <if test="comment_seq != null">
+                and comment_seq = #{comment_seq}
+            </if>
+            <if test="comment_seq == null">
+                and comment_seq is null
+            </if>
+        </where>
     </delete>
 
 </mapper>

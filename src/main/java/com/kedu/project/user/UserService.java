@@ -104,6 +104,10 @@ public class UserService {
         return healthyRecorddao.eventDelete(dto);
     }
 
+    public int secessionUser(String id){
+        return dao.secessionUser(id);
+    }
+
     public String familyCodeMake() {
         String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         Random random = new Random();

@@ -35,7 +35,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                         return (Principal) attributes.get("principal");
                     }
                 })
-                .setAllowedOriginPatterns("http://10.5.5.4:3000","http://10.10.55.89:3000")
+                .setAllowedOriginPatterns("http://10.5.5.4:3000","http://10.10.55.89:3000", "http://10.10.55.80:3000", "http://10.5.5.4:3002")
                 .addInterceptors(jwtHandshakeInterceptor)
                 .withSockJS();
     }

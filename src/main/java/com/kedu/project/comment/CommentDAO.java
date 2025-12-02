@@ -31,6 +31,10 @@ public class CommentDAO {
   public CommentDTO findTargetDTO(Map<String, Object> params1) {
     return mybatis.selectOne("Comment.findTargetDTO", params1);
   }
+  //	4-1 부모 시퀀스 가져오기
+  public CommentDTO findTargetPDTO(Map<String, Object> params1) {
+    return mybatis.selectOne("Comment.findTargetPDTO", params1);
+  }
 
   // 5.자식 코멘트 개수 가져오기
   public int getChildCount(int comment_seq) {

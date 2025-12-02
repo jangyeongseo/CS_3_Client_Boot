@@ -37,6 +37,10 @@
 	<select id="findTargetDTO" resultType="com.kedu.project.comment.CommentDTO">
 		select * from comment where comment_seq=#{comment_seq} and user_id=#{user_id}
 	</select>
+	<!-- 4-1 부모 시퀀스 가져오기 -->
+	<select id="findTargetPDTO" resultType="com.kedu.project.comment.CommentDTO">
+		select * from comment where comment_seq=#{comment_seq} 
+	</select>
     
     <!--5. 자식 댓글 개수 가져오기-->
     <select id="getChildCount" resultType="int">

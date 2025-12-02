@@ -17,4 +17,12 @@ public class ReportDAO {
         return mybatis.insert("report.reportComment", dto);
     }
 
+    public int admindeleteBoard(int board_seq){
+        return mybatis.delete("report.admindeleteBoard", board_seq);
+    }
+
+    public int admindeleteCommnet(int comment_seq){
+        return mybatis.delete("report.admindeleteCommnet", comment_seq);
+    }
+
 }

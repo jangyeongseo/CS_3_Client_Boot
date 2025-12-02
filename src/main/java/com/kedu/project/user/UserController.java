@@ -15,6 +15,7 @@ import com.kedu.project.healthy_record.HealthyRecordDTO;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @RequestMapping("/user")
@@ -90,5 +91,10 @@ public class UserController {
     public ResponseEntity<Integer> eventDelete(@RequestBody HealthyRecordDTO dto, @AuthenticationPrincipal String id) {
         dto.setUser_id(id);
         return ResponseEntity.ok(userService.eventDelete(dto));
+    }
+
+    @DeleteMapping("/secession")
+    public ResponseEntity<Integer> secessionUser(@AuthenticationPrincipal String id) {
+        return ResponseEntity.ok(userService.secessionUser(id));
     }
 }

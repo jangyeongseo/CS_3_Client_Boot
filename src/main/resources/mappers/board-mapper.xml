@@ -137,5 +137,9 @@
 		select user_id from board where board_seq = #{board_seq}
 	</select>
 
+	<delete id="admindeleteBoard">
+		delete from board where board_seq = #{board_seq}
+	</delete>
+
 
 </mapper>

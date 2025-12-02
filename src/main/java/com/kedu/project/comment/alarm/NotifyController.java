@@ -8,9 +8,11 @@ import com.kedu.project.comment.CommentDTO;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.user.SimpUserRegistry;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -78,6 +80,43 @@ public class NotifyController {
     @PostMapping("/deleteAlarm")
     public ResponseEntity<?> deleteAlarm(@RequestBody AlarmDTO dto) {
         return ResponseEntity.ok(alarmService.deleteAlarm(dto));
+    }
+
+    @MessageMapping("/admin/notify/send/board")
+    public void sendAdminDeleteBoard(@Payload int board_seq) {
+        System.out.println(board_seq);
+        String writerId = alarmService.getWriterIdByBoardSeq(board_seq);
+        alarmService.admindeleteBoard(board_seq, writerId);
+        System.out.println("어드민 : " + writerId);
+
+        AlarmDTO alarm = new AlarmDTO();
+        alarm.setUser_id(writerId);
+        alarm.setBoard_seq(String.valueOf(board_seq));
+        alarm.setComment_seq(null);
+        alarm.setType("A");
+
+        int alarmSeq = alarmService.saveAlarm(alarm);
+        alarm.setAlarm_seq(alarmSeq);
+        messagingTemplate.convertAndSendToUser(writerId, "/queue/notify", alarm);
+
+    }
+
+    @MessageMapping("/admin/notify/send/comment")
+    public void sendAdminDeleteComment(@Payload int comment_seq) {
+        System.out.println(comment_seq);
+        String writerId = alarmService.getWriterIdByCommentSeq(comment_seq);
+        alarmService.admindeleteCommnet(comment_seq, writerId);
+
+        AlarmDTO alarm = new AlarmDTO();
+        alarm.setUser_id(writerId);
+        alarm.setBoard_seq(null);
+        alarm.setComment_seq(comment_seq);
+        alarm.setType("A");
+
+        int alarmSeq = alarmService.saveAlarm(alarm);
+        alarm.setAlarm_seq(alarmSeq);
+        messagingTemplate.convertAndSendToUser(writerId, "/queue/notify", alarm);
+
     }
 
 }

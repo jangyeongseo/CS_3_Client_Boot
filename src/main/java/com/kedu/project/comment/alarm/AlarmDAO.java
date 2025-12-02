@@ -23,4 +23,5 @@ public class AlarmDAO {
     public int deleteAlarm(AlarmDTO dto){
         return mybatis.delete("alarm.deleteAlarm", dto);
     }
+
 }

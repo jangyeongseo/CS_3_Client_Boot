@@ -15,4 +15,12 @@
         VALUES (#{user_id}, #{comment_seq}, #{report_type})
     </insert>
 
+    <delete id="admindeleteBoard">
+        delete from report where board_seq = #{board_seq}
+    </delete>
+
+    <delete id="admindeleteCommnet">
+        delete from report where comment_seq = #{comment_seq}
+    </delete>
+
 </mapper>

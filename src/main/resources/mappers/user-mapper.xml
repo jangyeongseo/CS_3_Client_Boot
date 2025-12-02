@@ -61,4 +61,8 @@
     	select * from user where family_code = #{family_code}
     </select>
 
+    <delete id="secessionUser">
+        delect from user where user_id = #{user_id}
+    </delete>
+
 </mapper>   

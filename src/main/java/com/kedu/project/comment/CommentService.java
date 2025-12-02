@@ -65,12 +65,12 @@ public class CommentService {
     	
     	}else {//3. 해당 댓글이 자식 댓글일 경우
     		dao.strictDelete(comment_seq); //자식댓글은 바로 삭제하고
-    		
+    		System.out.println("ddd"+comment_seq);
     		Map params2 = new HashMap();
     		params2.put("comment_seq", targetdto.getParent_comment_seq());
-    		params2.put("user_id", user_id);
-    		CommentDTO parentdto = dao.findTargetDTO(params2); //부모 디티오 가져와서
-    		
+    		// params2.put("user_id", user_id);
+    		CommentDTO parentdto = dao.findTargetPDTO(params2); //부모 디티오 가져와서
+    		System.out.println("dddddddddd"+parentdto);
     		if(parentdto.getIs_deleted()==1){//부모 디티오의 is_delete가 1 이면
     			int childCount =dao.getChildCount(parentdto.getComment_seq());//남아있는 자식 댓글을 조회하고
     			
