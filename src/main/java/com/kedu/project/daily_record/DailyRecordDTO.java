@@ -23,4 +23,5 @@ public class DailyRecordDTO {
     private String record_type;  // "milk", "toilet/poop", "toilet/pee", "baby_food", "sleep", "temperature"
     private int amount_value; // 양 또는 횟수 또는 시간
     private Timestamp created_at; // 생성 날짜
+    private String sleep_group_id; //수면에만 추가, 다른애들은 null
 }
