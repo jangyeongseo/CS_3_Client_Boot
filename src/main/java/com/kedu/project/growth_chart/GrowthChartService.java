@@ -20,12 +20,12 @@ public class GrowthChartService {
 	@Autowired
 	private GrowthChartDAO growthChartDAO;
 
-	private static final int MAX_DAYS_AGO = 7;
+	private static final int MAX_DAYS_AGO = 30; // 잠깐 insert 하려고 바꿨어요
 
 
 	@Transactional //  5개 DTO 중 하나라도 실패하면 전체 롤백
 	public void insertGrowth(List<GrowthChartDTO> dtoList) throws IllegalArgumentException, IllegalStateException {
-
+		System.err.println("도달했나요111?");
 		if (dtoList == null || dtoList.isEmpty()) {
 			throw new IllegalArgumentException("입력할 데이터가 없습니다.");
 		}

@@ -37,7 +37,7 @@ public class SecurityConfig {
                 auth.requestMatchers(
                     "/user/idChack", "/user/nicknameChack", "/user/signup",
                     "/user/login", "/user/pindIdByEmail", "/user/pindPwByEmail",
-                    "/file/**", "/alarm/**", "/ws-stomp/**", "/sockjs/**"
+                    "/file/**", "/alarm/**", "/ws-stomp/**", "/sockjs/**", "/emailCheck/**"
                 ).permitAll();
                 auth.requestMatchers(HttpMethod.GET, "/board/**").permitAll();
                 auth.requestMatchers(HttpMethod.POST, "/board/**").authenticated();
