@@ -7,10 +7,72 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.kedu.project.config.PageNaviConfig;
+import com.kedu.project.file_info.FileDTO;
+
+import com.kedu.project.file_info.FileService;
+
 @Service
 public class BoardService {
     @Autowired
     private BoardDAO dao;
+    @Autowired
+	private FileService fServ;
+    
+    
+    //0. 겟매핑
+    public Map<String, Object> getPagedFilteredBoardList(
+            int page,
+            String board_type,
+            String target,
+            String id
+    ) {
+        // 0) 로그인 여부 확인
+        boolean is_privated = (id != null && !id.equals("anonymousUser"));
+
+        // 1) 총 게시글 개수 조회
+        int totalCount;
+        if (target != null) {
+            totalCount = getTotalCountFindTarget(board_type, target, is_privated);
+        } else {
+            totalCount = getTotalCount(board_type, is_privated);
+        }
+
+        if (totalCount == 0) {
+            return null; // 컨트롤러에서 noContent() 처리하도록 위임
+        }
+
+        // 2) 페이징 계산
+        int count = PageNaviConfig.RECORD_COUNT_PER_PAGE;
+        int offset = (page - 1) * count;
+
+        // 3) 데이터 조회
+        List<BoardDTO> boards;
+        if (target != null) {
+            boards = getBoardListFromToWithTarget(board_type, offset, count, target, is_privated);
+        } else {
+            boards = getBoardListFromTo(board_type, offset, count, is_privated);
+        }
+
+        // 4) 썸네일 조회
+        List<Integer> seqList = boards.stream()
+                .map(BoardDTO::getBoard_seq)
+                .toList();
+
+        List<FileDTO> thumbs = fServ.getThumsFromTo(seqList);
+
+        // 5) 결과 구성
+        Map<String, Object> response = new HashMap<>();
+        response.put("boards", boards);
+        response.put("thumbs", thumbs);
+        response.put("totalCount", totalCount);
+        response.put("page", page);
+        response.put("count", count);
+
+        return response;
+    }
+
+    
     
     
     //1. 토탈 카운트 계산

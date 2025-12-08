@@ -48,51 +48,13 @@ public class BoardController {
     		@RequestParam(required=false) String target, //검색어
     		@AuthenticationPrincipal String id// 클라이언트 아이디
     		){
-    
     	
-    	//0) 인증정보 조회
-    	boolean is_privated=false;
-    	// 로그인 상태면 멤버글도 허용
-    	if (id != null && !id.equals("anonymousUser")) {
-    	    is_privated = true;
-    	}
-    	
-    	//1) 전체 게시글 개수 조회
-    	int totalCount=0;
-    	if(target!=null) {
-    		totalCount = boardService.getTotalCountFindTarget(board_type,target,is_privated);
-    	}else{
-    		totalCount = boardService.getTotalCount(board_type, is_privated);
-    		}
-    	if(totalCount==0) {
-    		return ResponseEntity.noContent().build();
-    	}
-    	
-    	//2) 페이지당 데이터 수 10개
-    	int count = PageNaviConfig.RECORD_COUNT_PER_PAGE; //몇개 가져올지
-    	int offset = (page - 1) * count; // 몇번째 데이터부터 시작
-    	
-    	//3) 페이지에 맞는 데이터 꺼내기
-    	List<BoardDTO> boards=null;
-    	if(target!=null) {
-    		boards=boardService.getBoardListFromToWithTarget(board_type,offset,count,target,is_privated);
-    	}else{
-    		boards= boardService.getBoardListFromTo(board_type,offset,count,is_privated); //보드 타입에 대하여, n번째부터 n개 가져오기
-    		}
-    	
-    	//4) 페이지에 맞는 데이터의 썸네일 파일이 있다면 가져옴
-    		List<Integer> seqList = boards.stream().map(BoardDTO ->BoardDTO.getBoard_seq()).toList();//boards의 seq만 꺼내서 재구성
-    		List<FileDTO> thumbs= fileService.getThumsFromTo(seqList);
-    		
-    	//5) 클라이언트 전송
-    		Map<String, Object> response = new HashMap<>();
-    		response.put("boards", boards);
-    		response.put("thumbs", thumbs);
-    		response.put("totalCount", totalCount);
-    		response.put("page", page);
-    		response.put("count",count);
-    	
-    		return ResponseEntity.ok(response);
+        Map<String, Object> response = boardService.getPagedFilteredBoardList(page, board_type, target, id);
+        if (response == null) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(response);
     }
     
     //2. 보드 작성

@@ -283,7 +283,7 @@ public class FileService {
     }
     
     //6. 새벽 4시마다 미리보기용 임시파일 db+gcs정리
-    @Scheduled (cron="0 49 08 * * *")
+    @Scheduled (cron="0 0 4 * * *")
     public void cleanUpTemp() {
     	// 1. created_at + target_seq 가 null인 파일 목록 가져오기
     	List<FileDTO> files =dao.getTempFiles();
