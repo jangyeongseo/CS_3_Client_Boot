@@ -22,14 +22,12 @@
          #{status}, #{birth_date}, NOW())
     </insert>
     
-    <select id="selectBabyInfo" parameterType="int" resultType="com.kedu.project.baby.BabyDTO">
-    SELECT baby_seq, gender, status, birth_date FROM 
-        baby
-    WHERE 
-        baby_seq = #{babySeq}
-</select>
+    <select id="selectBabyInfo" resultType="com.kedu.project.baby.BabyDTO">
+        SELECT baby_seq, gender, status, birth_date 
+        FROM baby
+        WHERE  baby_seq = #{baby_seq} and family_code = #{family_code}   
+    </select>
     
-
     <select id="babyListByMypage" resultType="com.kedu.project.baby.BabyDTO">
         select * from baby where family_code = #{family_code} order by birth_date asc
     </select>

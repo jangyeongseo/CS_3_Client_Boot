@@ -51,18 +51,15 @@ public class UserService {
     public Map<String, String> login(UserDTO dto) {
         dto.setPassword(EncryptionUtil.encrypt(dto.getPassword()));
         // 유저 정보 포장
-        UserDTO user = dao.userDataById(dto);
-        System.out.println(user.getUser_id());
+        String lastBabySeq = dao.login(dto);
         // 애기 시퀀스 ( return용 )
-        String babySeq = String.valueOf(user.getLast_baby());
-        System.out.println(babySeq);
         String token = jwt.createToken(dto.getUser_id());
         String familCode = dao.familyCode(dto.getUser_id());
 
         Map<String, String> map = new HashMap<>();
         map.put("token", token);
-        map.put("babySeq", babySeq);
-        map.put("babyDueDate", babydao.babyDueDate(familCode, babySeq));
+        map.put("babySeq", lastBabySeq);
+        map.put("babyDueDate", babydao.babyDueDate(familCode, lastBabySeq));
 
         return map;
     }

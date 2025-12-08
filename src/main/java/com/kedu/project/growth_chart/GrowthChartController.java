@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,11 +35,11 @@ public class GrowthChartController {
 	// baby info 조회
 
 	@GetMapping("/{babySeq}")
-	public ResponseEntity<BabyDTO> getBabyInfoForChart(@PathVariable int babySeq) {
+	public ResponseEntity<BabyDTO> getBabyInfoForChart(@PathVariable int babySeq, @AuthenticationPrincipal String id) {
 		System.out.println("아기 시퀀스" + babySeq);
 		// BabyService를 호출하여 BabyDTO (status, birthDate) 반환
 		// Service는 int를 사용하므로 Long으로 변환할 필요 없음
-		BabyDTO babyInfo = babyService.getBabyInfo(babySeq);
+		BabyDTO babyInfo = babyService.getBabyInfo(babySeq, id);
 
 		System.out.println(babyInfo);
 
