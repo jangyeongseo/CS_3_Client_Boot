@@ -50,9 +50,7 @@ public class UserService {
 
     public Map<String, String> login(UserDTO dto) {
         dto.setPassword(EncryptionUtil.encrypt(dto.getPassword()));
-        // 유저 정보 포장
         String lastBabySeq = dao.login(dto);
-        // 애기 시퀀스 ( return용 )
         String token = jwt.createToken(dto.getUser_id());
         String familCode = dao.familyCode(dto.getUser_id());
 
@@ -90,13 +88,13 @@ public class UserService {
         List<BabyDTO> result = new ArrayList<>();
         for (BabyDTO baby : list) {
             LocalDate birthDate = LocalDate.parse(baby.getBirth_date());
-            if (birthDate.isAfter(today)) {// 미래 날짜
-                if(!baby.getStatus().equals("fetus")){
+            if (birthDate.isAfter(today)) {
+                if (!baby.getStatus().equals("fetus")) {
                     babydao.updateStatus(baby);
                     baby.setStatus("fetus");
                 }
-            } else {// 오늘 포함 과거 날짜
-                if(!baby.getStatus().equals("infant")){
+            } else {
+                if (!baby.getStatus().equals("infant")) {
                     babydao.updateStatus(baby);
                     baby.setStatus("infant");
                 }
@@ -132,10 +130,8 @@ public class UserService {
         while (true) {
             StringBuilder result = new StringBuilder(length);
             for (int i = 0; i < length; i++) {
-                // characters 문자열 내에서 랜덤한 인덱스를 선택
                 int index = random.nextInt(characters.length());
 
-                // 해당 인덱스의 문자를 StringBuilder에 추가
                 result.append(characters.charAt(index));
             }
             int exists = dao.familyCodeChack(result.toString());

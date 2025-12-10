@@ -25,7 +25,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
 
-        registry.addEndpoint("/ws-stomp")
+        registry.addEndpoint("/wss-stomp")
                 .setHandshakeHandler(new DefaultHandshakeHandler() {
                     @Override
                     protected Principal determineUser(ServerHttpRequest request,
@@ -35,7 +35,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                         return (Principal) attributes.get("principal");
                     }
                 })
-                .setAllowedOriginPatterns("http://10.5.5.4:3000","http://10.10.55.89:3000", "http://10.10.55.80:3000", "http://10.5.5.4:3002","http://10.5.5.5:3000","http://10.5.5.4:3001", "http://10.10.55.103:3000")
+                .setAllowedOriginPatterns("https://cocobell.site","https://cs3rd-client.web.app", "https://cs-admin-cocobell.web.app")
                 .addInterceptors(jwtHandshakeInterceptor)
                 .withSockJS();
     }

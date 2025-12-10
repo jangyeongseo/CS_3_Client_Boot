@@ -36,14 +36,4 @@ public class BabyController {
         return ResponseEntity.ok(babyService.babypageUpdate(dto, id));
     }
     
-  //-----------지원 아기인덱스에서 아기 dto 꺼내오기
-
-    
-    
-//   
-//     @GetMapping("/date")
-//     public ResponseEntity<String> babyDueDate(@RequestParam("seq") int baby_seq, @AuthenticationPrincipal String id) {
-//         return ResponseEntity.ok(babyService.babyDueDate(baby_seq, id));
-//     }
-
 }

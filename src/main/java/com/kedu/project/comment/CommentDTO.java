@@ -13,16 +13,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CommentDTO {
-    /*
-        댓글  DTO
-    */
     private int comment_seq;
-    private int board_seq; // 부모 시퀀스 ( 게시글 번호 )
-    private Integer parent_comment_seq;//부모 댓글 시퀀스 번호
+    private int board_seq;
+    private Integer parent_comment_seq;
     private String user_id;
-//    private int parent_comment_seq;
-    private int is_deleted;  // 삭제 여부
-    private boolean is_reported; // 신고 횟수
-    private Timestamp created_at; // 작성 날짜
-    private String comment_content;//댓글 내용
+    private int is_deleted; 
+    private boolean is_reported; 
+    private Timestamp created_at;
+    private String comment_content;
 }

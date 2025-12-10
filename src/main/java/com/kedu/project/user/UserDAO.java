@@ -62,7 +62,6 @@ public class UserDAO {
         return mybatis.update("user.changeBaby", dto);
     }   
     
-    //---------------------------------지원
     public List<UserDTO> getMyfamily (String family_code){
     	return mybatis.selectList("user.getMyfamily",family_code);
     }

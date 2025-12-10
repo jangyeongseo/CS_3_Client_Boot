@@ -5,7 +5,6 @@
 
 <mapper namespace="Board">
 
-	<!--1. 모든 타입 토탈 카운트-->
 	<select id="getTotalAllCount" parameterType="map" resultType="int">
 	    SELECT COUNT(*)
 	    FROM board
@@ -15,7 +14,6 @@
 	    </if>
 	</select>
 
-	<!--1-1. 모든 타입 + 검색어 토탈 카운트-->
 	<select id="getTotalAllFindTargetCount" parameterType="map" resultType="int">
 		SELECT COUNT(*)
     	FROM board
@@ -26,14 +24,12 @@
       	AND is_privated <![CDATA[ <= ]]> #{is_privated}
 	</select>
 
-	<!--2. 특정 타입 토탈 카운트-->
 	<select id="getTotalTypeCount" resultType="int">
 		select count(*) 
 		from board 
 		where board_type=#{board_type} and is_privated <![CDATA[ <= ]]> #{is_privated}
 	</select>
 
-	<!--2-1. 특정 타입 + 검색어 토탈 카운트-->
 	<select id="getTotalTypeFindTargetCount" resultType="int">
 		select count(*) 
 		from board 
@@ -45,7 +41,6 @@
 		)
 	</select>
 
-	<!--3. 일반 페이징-->
 	<select id="getBoardListFromTo" resultType="com.kedu.project.board.BoardDTO">
 		select * from board
 		<where>
@@ -60,7 +55,6 @@
 		limit #{offset}, #{count}
 	</select>
 
-	<!--3-1. 검색 + 타입 페이징-->
 	<select id="getBoardListFromToWithTarget" resultType="com.kedu.project.board.BoardDTO">
 		select * from board
 		<where>
@@ -79,13 +73,11 @@
 		limit #{offset}, #{count}
 	</select>
 	
-	<!--4. 보드 작성-->
 	<insert id="postBoard" parameterType="com.kedu.project.board.BoardDTO" useGeneratedKeys="true" keyProperty="board_seq">
 	    insert into board (user_id, board_type, content, title, is_privated, created_at)
 	    values (#{user_id}, #{board_type}, #{content}, #{title}, #{is_privated}, now())
 	</insert>
 
-	<!--5. 보드 디테일 가져오기-->
 	<select id="getDetailBoard" parameterType="map" resultType="map">
 	    select
 	        b.board_seq,
@@ -103,23 +95,19 @@
 	    where b.board_seq = #{board_seq}
 	</select>
 	
-	<!--6.보드 삭제-->
 	<delete id="deleteTargetBoard">
 		delete from board where board_seq = #{board_seq} and user_id= #{user_id}
 	</delete>
 	
-	<!--7. 보드 수정-->
 	<update id="updateBoard">
 		update board set title=#{title}, content = #{content}, board_type = #{board_type}, is_privated = #{is_privated} where board_seq = #{board_seq} and user_id= #{user_id}
 	</update>
 	
-	<!--8. 조회수 증가-->
 	<update id="increaseViewCount">
 		update board set view_count = view_count +1
 		where board_seq = #{board_seq}
 	</update>
 	
-	<!--9. 댓글 개수-->
 	<update id="updateCommentCount">
 	    UPDATE board
 	    SET is_reported = (
@@ -131,8 +119,6 @@
 	    WHERE board_seq = #{board_seq};
 	</update>
 	
-
-	<!-- 혜빈 추가 -->
 	<select id="getBoardWriterId" resultType="String">
 		select user_id from board where board_seq = #{board_seq}
 	</select>
@@ -140,6 +126,5 @@
 	<delete id="admindeleteBoard">
 		delete from board where board_seq = #{board_seq}
 	</delete>
-
 
 </mapper>

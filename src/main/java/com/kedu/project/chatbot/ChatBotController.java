@@ -23,14 +23,13 @@ public class ChatBotController {
 
     @GetMapping("/answer")
     public ResponseEntity<ChatBotDTO> answer(@RequestParam("trigger_text") String buttonText) {
-        System.out.println(buttonText);
         return ResponseEntity.ok(chatBotService.answer(buttonText));
     }
 
     @PostMapping("/aiAnswer")
     public ResponseEntity<String> aiAnswer(@RequestBody Map<String, String> body, @AuthenticationPrincipal String id) {
-        String question = body.get("question"); // 클라이언트에서 보낸 질문
-        String answer = geminiService.generateText(question, id); // AI 호출
+        String question = body.get("question");
+        String answer = geminiService.generateText(question, id); 
         return ResponseEntity.ok(answer);
     }
 

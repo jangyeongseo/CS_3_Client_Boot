@@ -21,15 +21,14 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/file")
 @RestController
 public class FileController {
-	@Autowired
+    @Autowired
     private FileService fileService;
-	
-	
-	//다운로드용 gcs링크
+
     @GetMapping("/download")
     public ResponseEntity<InputStreamResource> download(String sysname, String file_type) throws Exception {
         Map<String, Object> data = fileService.getFileStream(sysname, file_type);
-        if (data == null) return ResponseEntity.notFound().build();
+        if (data == null)
+            return ResponseEntity.notFound().build();
 
         String oriName = (String) data.get("oriName");
         InputStream stream = (InputStream) data.get("stream");
@@ -41,19 +40,15 @@ public class FileController {
 
         return ResponseEntity.ok().headers(headers).body(new InputStreamResource(stream));
     }
-    
-    //미리보기용 컨트롤러
+
     @PostMapping("/tempupload")
     public ResponseEntity<?> tempUpload(
-        @RequestPart("file") MultipartFile file,
-        @RequestParam("target_type") String targetType,
-        @AuthenticationPrincipal String id
-    ) {
-    	
+            @RequestPart("file") MultipartFile file,
+            @RequestParam("target_type") String targetType,
+            @AuthenticationPrincipal String id) {
+
         String url = fileService.uploadTempFile(file, targetType, id);
         return ResponseEntity.ok(Map.of("url", url));
     }
-	
-	
-	
+
 }

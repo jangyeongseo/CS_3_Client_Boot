@@ -4,12 +4,10 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="DailyRecord">
-	<!--0. 그룹아이디로 같은 그룹아이디 리스트 가져오기-->
 	<select id="getSleepGroup" resultType="com.kedu.project.daily_record.DailyRecordDTO">
 		select * from daily_record where sleep_group_id = #{sleep_group_id}
 	</select>
 	
-	<!--0-1. 받은 날짜기준으로 어제~내일까지의 sleep 기록들 리스트로 뽑아오기-->
 	<select id="getSleepRange" resultType="com.kedu.project.daily_record.DailyRecordDTO">
 	    SELECT
 	        *
@@ -24,15 +22,6 @@
 	    ORDER BY created_at;
 	</select>
 	
-	
-<!--    <select id="getDailyRecord" resultType="com.kedu.project.daily_record.DailyRecordDTO">
-	    select *
-	    from daily_record
-	    where baby_seq = #{baby_seq}
-	      AND DATE(created_at) BETWEEN #{start} AND #{end}
-	    order by created_at
-	</select>-->
-	
 	<select id="getDailyRecord" resultType="com.kedu.project.daily_record.DailyRecordDTO">
 	    SELECT *
 	    FROM daily_record
@@ -41,7 +30,6 @@
 	      AND created_at <![CDATA[ <= ]]> CONCAT(#{end}, ' 23:59:59')
 	    ORDER BY created_at
 	</select>
-	
 
 	<select id="getTargetData"  resultType="com.kedu.project.daily_record.DailyRecordDTO">
 		SELECT *
@@ -65,7 +53,6 @@
 	    </foreach>
 	</insert>
 	
-	<!-- 4. 데이터 수정 -->
 	<update id="updateData">
 	    <foreach collection="list" item="dto" separator=";">
 	        UPDATE daily_record
@@ -79,7 +66,6 @@
 	    </foreach>
 	</update>
 	
-	<!-- 5 데이터 그룹아이디 따라 삭제 -->
 	<delete id="deleteSleepGroup">
 	    DELETE FROM daily_record
 	    WHERE baby_seq = #{baby_seq}
@@ -87,7 +73,6 @@
 	    AND user_id = #{user_id}
 	</delete>
 	
-	<!--5.1 다른데이터 삭제-->
 	<delete id="deleteData">
 		DELETE FROM daily_record
 	    WHERE baby_seq = #{baby_seq}

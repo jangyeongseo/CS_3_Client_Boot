@@ -17,16 +17,12 @@ public class CommentController {
     @Autowired
     private CommentService commentService;    
     
-    
-    //1. 댓글 입력하기
     @PostMapping
     public ResponseEntity<Void> postComment(@RequestBody CommentDTO dto, @AuthenticationPrincipal String id){
     	commentService.postComment(dto,id);
-    	System.out.println(dto);
     	return ResponseEntity.ok().build();
     }
     
-    //2.댓글 삭제
     @DeleteMapping("/{comment_seq}")
     public ResponseEntity<Void> deleteComment(
             @PathVariable("comment_seq") int comment_seq,
@@ -35,7 +31,6 @@ public class CommentController {
         return ResponseEntity.ok().build();
     }
     
-    //3. 댓글 수정
     @PutMapping("/{comment_seq}")
     public ResponseEntity<Void> updateComment(
     		@PathVariable("comment_seq") int comment_seq,
@@ -48,6 +43,5 @@ public class CommentController {
 
     	return ResponseEntity.ok().build();
     }
-    
     
 }

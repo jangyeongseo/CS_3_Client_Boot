@@ -27,23 +27,21 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
-            .formLogin(form -> form.disable())
-            .httpBasic(basic -> basic.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> {
-                // 인증 없이 접근 가능한 URL
-                auth.requestMatchers(
-                    "/user/idChack", "/user/nicknameChack", "/user/signup",
-                    "/user/login", "/user/pindIdByEmail", "/user/pindPwByEmail",
-                    "/file/**", "/alarm/**", "/ws-stomp/**", "/sockjs/**", "/emailCheck/**"
-                ).permitAll();
-                auth.requestMatchers(HttpMethod.GET, "/board/**").permitAll();
-                auth.requestMatchers(HttpMethod.POST, "/board/**").authenticated();
-                // 나머지 요청은 모두 인증 필요
-                auth.anyRequest().authenticated();
-            }); // 익명 접근 차단
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
+                .formLogin(form -> form.disable())
+                .httpBasic(basic -> basic.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> {
+                    auth.requestMatchers(
+                            "/user/idChack**", "/user/nicknameChack**", "/user/signup**",
+                            "/user/login**", "/user/pindIdByEmail**", "/user/pindPwByEmail**",
+                            "/file/**", "/alarm/**", "/wss-stomp/**", "/sockjs/**",
+                            "/emailCheck**", "/emailCheck/**").permitAll();
+                    auth.requestMatchers(HttpMethod.GET, "/board/**").permitAll();
+                    auth.requestMatchers(HttpMethod.POST, "/board/**").authenticated();
+                    auth.anyRequest().authenticated();
+                });
 
         http.addFilterBefore(JWTFilter, UsernamePasswordAuthenticationFilter.class);
 
@@ -54,14 +52,9 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
 
-
-        config.addAllowedOrigin("http://10.10.55.103:3000");
-        config.addAllowedOrigin("http://10.5.5.4:3000");
-        config.addAllowedOrigin("http://192.168.0.6:3000");
-        config.addAllowedOrigin("http://10.10.55.80:3000");
-        config.addAllowedOrigin("http://10.10.55.89:3000");
-        config.addAllowedOrigin("http://10.5.5.4:3001");
-        config.addAllowedOrigin("http://10.5.5.5:3000");
+        config.addAllowedOrigin("https://cocobell.site");
+        config.addAllowedOrigin("https://cs3rd-client.web.app");
+        config.addAllowedOrigin("https://cs-admin-cocobell.web.app");
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
         config.setAllowCredentials(true);

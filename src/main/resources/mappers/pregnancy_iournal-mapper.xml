@@ -5,18 +5,15 @@
 
 <mapper namespace="PregnancyJournal">
 	
-	<!--1. 산모수첩 입력-->
     <insert id="postDiary" useGeneratedKeys="true" keyProperty="journal_seq">
         insert into pregnancy_journal (baby_seq, user_id, pregnancy_week, record_datetime, title, content)
         values (#{baby_seq},#{user_id},#{pregnancy_week}, now(),#{title},#{content})
     </insert>
     
-    <!--2. 타켓 week + 아기 시퀀스로 주별 산모수첩 가져오기-->
 	<select id="getTargetWeek" resultType="com.kedu.project.pregnancy_journal.PregnancyJournalDTO">
 		select * from pregnancy_journal where baby_seq=#{baby_seq} and pregnancy_week =#{pregnancy_week} order by record_datetime
 	</select>
 	
-	<!--3.시퀀스로 dto 가져오기-->
 	<select id="getTargetDTO" resultType="map">
 		select 
 			j.journal_seq,
@@ -32,13 +29,10 @@
 		where journal_seq =#{journal_seq} order by record_datetime
 	</select>
 	
-	
-	<!--4. 삭제-->
 	<delete id="deleteTargetDTO">
 		delete from pregnancy_journal where journal_seq =#{journal_seq} and user_id=#{user_id}
 	</delete>
 	
-	<!--5. 업데이트 -->
 	<update id="updateJournal">
 		update pregnancy_journal set title=#{title}, content = #{content} where journal_seq =#{journal_seq}
 	</update>

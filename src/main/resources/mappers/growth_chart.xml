@@ -4,9 +4,6 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="chart">
-
-
-    <!-- 혜빈 - 베이비 마이페이지 몸무게 출력 -->
     <select id="getWeightByBabypage" resultType="String">
         SELECT measure_value FROM growth_chart where baby_seq = #{baby_seq} 
         and measure_type = 'EFW' order by measure_date desc limit 1
@@ -27,8 +24,6 @@
         AND 
             measure_date BETWEEN #{startDate} AND #{endDate}
     </select>
-    
-   
     
     <select id="countByBabyAndDate" parameterType="Map" resultType="int">
         SELECT COUNT(*) 
@@ -55,11 +50,11 @@
     </insert>
     
     <select id="selectDetail" parameterType="int" resultType="map">
-    SELECT measure_date, measure_type, measure_value
-    FROM growth_chart
-    WHERE baby_seq = #{baby_seq}
-    ORDER BY measure_date ASC
-</select>
+        SELECT measure_date, measure_type, measure_value
+        FROM growth_chart
+        WHERE baby_seq = #{baby_seq}
+        ORDER BY measure_date ASC
+    </select>
 
 	<update id="updateChart" parameterType="com.kedu.project.growth_chart.GrowthChartDTO">
     UPDATE growth_chart
@@ -71,6 +66,6 @@
       AND measure_type = #{measure_type}
       AND measure_date = #{created_at}
       
-</update>
+    </update>
 
 </mapper>

@@ -20,7 +20,6 @@ public class GeminiService {
     private final Client geminiClient;
     private final String model = "gemini-2.5-flash";
 
-    // 유저별 대화 히스토리 저장소
     private final Map<String, List<String>> conversationMap = new ConcurrentHashMap<>();
 
     public GeminiService(@Value("${gemini.api.key}") String apiKey) {
@@ -31,10 +30,8 @@ public class GeminiService {
 
     public String generateText(String prompt, String userId) {
 
-        // 유저 대화 히스토리 가져오거나 생성
         conversationMap.putIfAbsent(userId, new ArrayList<>());
         List<String> history = conversationMap.get(userId);
-        // 시스템 규칙: AI 응답 가이드라인
         String baseCondition = """
                 다음 질문에 답해주세요.
 
@@ -55,16 +52,13 @@ public class GeminiService {
                    부모 입장에서 이해하기 쉬운 친절한 표현으로 설명해주세요.
                 """;
 
-        // 히스토리까지 포함된 실제 프롬프트 만들기
         StringBuilder fullPrompt = new StringBuilder();
         fullPrompt.append(baseCondition).append("\n\n");
 
-        // 지난 대화 넣기
         for (int i = 0; i < history.size(); i++) {
             fullPrompt.append("이전 질문 ").append(i + 1).append(": ").append(history.get(i)).append("\n");
         }
 
-        // 새 질문 넣기
         fullPrompt.append("사용자 질문: ").append(prompt);
 
         GenerateContentConfig config = GenerateContentConfig.builder()
@@ -85,9 +79,7 @@ public class GeminiService {
 
         String answer = resp.text();
 
-        // 히스토리 업데이트
         history.add(prompt);
-        // 필요하면 길조정 (10개 이상이면 오래된 것 삭제)
         if (history.size() > 10) {
             history.remove(0);
         }

@@ -55,8 +55,6 @@
         update user set last_baby = #{last_baby} where user_id = #{user_id}
     </update>
     
-    
-    <!--////////////////////지원-->
     <select id="getMyFamily" resultType="com.kedu.project.user.UserDTO">
     	select * from user where family_code = #{family_code}
     </select>

@@ -27,7 +27,6 @@ public class BabyDAO {
     }
 
     public BabyDTO selectBabyInfo(BabyDTO dto) {
-        //  mybatis.selectOne(Mapper ID, Parameter) 호출
     	return mybatis.selectOne("baby.selectBabyInfo", dto);
     }
     
@@ -44,8 +43,6 @@ public class BabyDAO {
         return mybatis.update("baby.updateStatus", dto);
     }
 
-    // -----------지원 아기 시퀀스+부모 아이디로 출산예정일 or 생일 가져오기
-    // 혜빈 살짝 수정 후 로그인 로직에 사용
     public String babyDueDate(String familCode, String babySeq) {
         return mybatis.selectOne("baby.babyDueDate", Map.of(
                 "family_code", familCode,

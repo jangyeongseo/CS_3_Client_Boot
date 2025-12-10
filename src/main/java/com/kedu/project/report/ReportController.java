@@ -15,13 +15,11 @@ public class ReportController {
 
     @PostMapping("/boardSeq")
     public ResponseEntity<Integer> reportBoard(@RequestBody ReportDTO dto) {
-        System.out.println("신고게시물"+dto.getBoard_seq());
         return ResponseEntity.ok(reportService.reportBoard(dto));
     }
 
     @PostMapping("/commentSeq")
     public ResponseEntity<Integer> reportComment(@RequestBody ReportDTO dto) {
-        System.out.println("신고게시물"+dto.getComment_seq());
         return ResponseEntity.ok(reportService.reportComment(dto));
     }
 }

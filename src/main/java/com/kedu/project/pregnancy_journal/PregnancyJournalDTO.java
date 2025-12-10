@@ -4,8 +4,6 @@ package com.kedu.project.pregnancy_journal;
 
 import java.sql.Timestamp;
 
-import com.kedu.project.board.BoardDTO;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

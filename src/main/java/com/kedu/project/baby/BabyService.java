@@ -2,9 +2,7 @@ package com.kedu.project.baby;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -61,7 +59,6 @@ public class BabyService {
 
     
     public BabyDTO getBabyInfo(int babySeq, String id) {
-        // DAO를 호출하여 DB에서 BabyDTO를 조회합니다.
         String familycode = userdao.familyCode(id);
         BabyDTO dto = new BabyDTO();
         dto.setBaby_seq(babySeq);
@@ -69,11 +66,8 @@ public class BabyService {
         BabyDTO babyInfo = dao.selectBabyInfo(dto);
 
         if (babyInfo == null) {
-            // 정보가 없는 경우, 클라이언트가 에러 처리하도록 null을 반환합니다.
-            // Controller가 404 응답을 반환하도록 설정되어 있습니다.
             return null;
         }
-        
         return babyInfo; 
     }
     
@@ -95,17 +89,4 @@ public class BabyService {
         }
     }
     
-    
-    
-    // //-----------지원 아기 시퀀스+부모 아이디로 출산예정일 or 생일 가져오기
-    // public String babyDueDate(int baby_seq, String id) {
-    // 	String familyCode = userdao.familyCode(id);  	
-    // 	Map<String, Object> params = new HashMap<>();
-    // 	params.put("baby_seq", baby_seq);
-    // 	params.put("family_code", familyCode);
-    	
-    // 	return dao.babyDueDate(params);
-    // }
-
-
 }
